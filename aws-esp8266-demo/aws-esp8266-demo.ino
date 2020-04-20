@@ -1,7 +1,6 @@
 #include <ESP8266WiFi.h>
 #include <WiFiClientSecure.h>
 #include <PubSubClient.h>
-#include <ArduinoJson.h> //https://github.com/bblanchon/ArduinoJson (use v6.xx)
 #include <time.h>
 #define emptyString String()
 
@@ -129,21 +128,13 @@ void connectToWiFi(String init_str)
 
 void updateDeviceShadow(const char * key, long value)
 {
-  DynamicJsonDocument jsonBuffer(JSON_OBJECT_SIZE(3) + 100);
-  JsonObject root = jsonBuffer.to<JsonObject>();
-  JsonObject state = root.createNestedObject("state");
-  JsonObject state_reported = state.createNestedObject("reported");
-
-  state_reported[key] = value;
+  char msg[50];
+  snprintf(msg, 75, "{\"state\":{\"reported\": {\"%s\": %ld}}}", key, value);
 
   Serial.printf("Sending  [%s]: ", MQTT_PUB_TOPIC);
-  Serial.println();
+  Serial.println(msg);
 
-  serializeJson(root, Serial);
-  char shadow[measureJson(root) + 1];
-  serializeJson(root, shadow, sizeof(shadow));
-
-  if (!client.publish(MQTT_PUB_TOPIC, shadow, false))
+  if (!client.publish(MQTT_PUB_TOPIC, msg, false))
     pubSubErr(client.state());
 }
 
