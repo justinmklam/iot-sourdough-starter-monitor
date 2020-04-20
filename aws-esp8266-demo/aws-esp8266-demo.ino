@@ -28,7 +28,7 @@ void NTPConnect(void)
 #endif
 
   Serial.print("Setting time using SNTP");
-  configTime(TIME_ZONE * 3600, DST * 3600, "pool.ntp.org", "time.nist.gov");
+  configTime(UTC_OFFSET * 3600, DST * 3600, "pool.ntp.org", "time.nist.gov");
   now = time(nullptr);
 
   while (now < nowish)
