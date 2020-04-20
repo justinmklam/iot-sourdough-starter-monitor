@@ -127,19 +127,19 @@ void connectToWiFi(String init_str)
     Serial.println("ok!");
 }
 
-void sendData(void)
+void updateDeviceShadow(const char * key, long value)
 {
   DynamicJsonDocument jsonBuffer(JSON_OBJECT_SIZE(3) + 100);
   JsonObject root = jsonBuffer.to<JsonObject>();
   JsonObject state = root.createNestedObject("state");
   JsonObject state_reported = state.createNestedObject("reported");
 
-  state_reported["value"] = random(100);
+  state_reported[key] = value;
 
   Serial.printf("Sending  [%s]: ", MQTT_PUB_TOPIC);
-  serializeJson(root, Serial);
   Serial.println();
 
+  serializeJson(root, Serial);
   char shadow[measureJson(root) + 1];
   serializeJson(root, shadow, sizeof(shadow));
 
@@ -187,7 +187,7 @@ void loop()
     if (millis() - lastMillis > 5000)
     {
       lastMillis = millis();
-      sendData();
+      updateDeviceShadow("value", random(100));
     }
   }
 }
