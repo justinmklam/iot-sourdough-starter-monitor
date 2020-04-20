@@ -150,9 +150,7 @@ void sendData(void)
 void setup()
 {
   Serial.begin(115200);
-  delay(5000);
-  Serial.println();
-  Serial.println();
+  delay(100);
 
   WiFi.hostname(THINGNAME);
   WiFi.mode(WIFI_STA);
