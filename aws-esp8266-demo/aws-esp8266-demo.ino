@@ -45,7 +45,7 @@ void NTPConnect(void)
   Serial.print(asctime(&timeinfo));
 }
 
-void messageReceived(char *topic, byte *payload, unsigned int length)
+void messageReceivedCallback(char *topic, byte *payload, unsigned int length)
 {
   Serial.print("Received [");
   Serial.print(topic);
@@ -158,7 +158,7 @@ void setup()
   net.setClientRSACert(&client_crt, &key);
 
   client.setServer(MQTT_HOST, MQTT_PORT);
-  client.setCallback(messageReceived);
+  client.setCallback(messageReceivedCallback);
 
   connectToMqtt();
 }
