@@ -6,3 +6,5 @@
 
 # Binary SSL files
 *.der
+
+.vscode/
