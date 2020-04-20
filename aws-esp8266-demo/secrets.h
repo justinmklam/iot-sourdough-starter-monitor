@@ -2,8 +2,8 @@
 
 #define SECRET
 
-const char ssid[] = "HouseOfLams-2.4G";
-const char pass[] = "l4mf4mily88";
+const char ssid[] = "mywifi";
+const char pass[] = "mypassword";
 
 #define THINGNAME "levain-monitor"
 
