@@ -37,6 +37,10 @@ http://arduino.esp8266.com/stable/package_esp8266com_index.json
 
 Install the following libraries (Sketch > Include Library > Manage Libraries):
 
-- [DHT sensor library](https://github.com/adafruit/DHT-sensor-library)
-- [Adafruit_VL6180X](https://github.com/adafruit/Adafruit_VL6180X)
-- [Adafruit SSD1306](https://github.com/adafruit/Adafruit_SSD1306)
+- Sensors
+    - [DHT sensor library](https://github.com/adafruit/DHT-sensor-library)
+    - [Adafruit_VL6180X](https://github.com/adafruit/Adafruit_VL6180X)
+    - [Adafruit SSD1306](https://github.com/adafruit/Adafruit_SSD1306)
+- AWS IOT:
+    - [Arduino MQTT](https://github.com/256dpi/arduino-mqtt)
+    - [Arduino JSON](https://github.com/bblanchon/ArduinoJson)
