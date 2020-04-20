@@ -35,12 +35,15 @@ Add the ESP8266 board to Arduino IDE (Files > Preferences, then paste the URL in
 http://arduino.esp8266.com/stable/package_esp8266com_index.json
 ```
 
+Versions:
+- Arduino: 1.8.12
+- ESP8266 core: 2.6.3
+
 Install the following libraries (Sketch > Include Library > Manage Libraries):
 
 - Sensors
-    - [DHT sensor library](https://github.com/adafruit/DHT-sensor-library)
-    - [Adafruit_VL6180X](https://github.com/adafruit/Adafruit_VL6180X)
-    - [Adafruit SSD1306](https://github.com/adafruit/Adafruit_SSD1306)
+    - [DHT sensor library 1.3.8](https://github.com/adafruit/DHT-sensor-library)
+    - [Adafruit_VL6180X 1.0.7](https://github.com/adafruit/Adafruit_VL6180X)
+    - [Adafruit SSD1306 2.2.1](https://github.com/adafruit/Adafruit_SSD1306)
 - AWS IOT:
-    - [Arduino MQTT](https://github.com/256dpi/arduino-mqtt)
-    - [Arduino JSON](https://github.com/bblanchon/ArduinoJson)
+    - [PubSubClient 2.7.0](https://github.com/knolleary/pubsubclient)
