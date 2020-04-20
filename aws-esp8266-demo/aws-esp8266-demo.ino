@@ -129,12 +129,12 @@ void connectToWiFi(String init_str)
 void updateDeviceShadow(const char * key, long value)
 {
   char msg[50];
-  snprintf(msg, 75, "{\"state\":{\"reported\": {\"%s\": %ld}}}", key, value);
+  snprintf(msg, 50, "{\"state\":{\"reported\": {\"%s\": %ld}}}", key, value);
 
   Serial.printf("Sending  [%s]: ", MQTT_PUB_TOPIC);
   Serial.println(msg);
 
-  if (!client.publish(MQTT_PUB_TOPIC, msg, false))
+  if (!client.publish(MQTT_PUB_TOPIC, msg))
     pubSubErr(client.state());
 }
 
