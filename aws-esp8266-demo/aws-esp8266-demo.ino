@@ -2,6 +2,7 @@
 #include <WiFiClientSecure.h>
 #include <PubSubClient.h>
 #include <time.h>
+#include "FS.h"
 
 //Follow instructions from https://github.com/debsahu/ESP-MQTT-AWS-IoT-Core/blob/master/doc/README.md
 //Enter values in secrets.h ▼
@@ -125,7 +126,66 @@ void waitUntilWifiConnected(String message)
   Serial.println("ok!");
 }
 
-void updateDeviceShadow(const char * key, long value)
+void loadCertificates(void) {
+  if (!SPIFFS.begin())
+  {
+    Serial.println("Failed to mount file system");
+    return;
+  }
+
+  Serial.print("Heap: ");
+  Serial.println(ESP.getFreeHeap());
+
+  // Load certificate file
+  File cert = SPIFFS.open("/cert.der", "r"); //replace cert.crt eith your uploaded file name
+  if (!cert)
+  {
+    Serial.println("Failed to open cert file");
+  }
+  else
+    Serial.println("Success to open cert file");
+
+  delay(1000);
+
+  if (net.loadCertificate(cert))
+    Serial.println("cert loaded");
+  else
+    Serial.println("cert not loaded");
+
+  // Load private key file
+  File private_key = SPIFFS.open("/private.der", "r"); //replace private eith your uploaded file name
+  if (!private_key)
+  {
+    Serial.println("Failed to open private cert file");
+  }
+  else
+    Serial.println("Success to open private cert file");
+
+  delay(1000);
+
+  if (net.loadPrivateKey(private_key))
+    Serial.println("private key loaded");
+  else
+    Serial.println("private key not loaded");
+
+  // Load CA file
+  File ca = SPIFFS.open("/ca.der", "r"); //replace ca eith your uploaded file name
+  if (!ca)
+  {
+    Serial.println("Failed to open ca ");
+  }
+  else
+    Serial.println("Success to open ca");
+
+  delay(1000);
+
+  if (net.loadCACert(ca))
+    Serial.println("ca loaded");
+  else
+    Serial.println("ca failed");
+}
+
+void updateDeviceShadow(const char *key, long value)
 {
   char msg[50];
   snprintf(msg, 50, "{\"state\":{\"reported\": {\"%s\": %ld}}}", key, value);
@@ -149,12 +209,7 @@ void setup()
 
   NTPConnect();
 
-  BearSSL::X509List cert(cacert);
-  BearSSL::X509List client_crt(client_cert);
-  BearSSL::PrivateKey key(privkey);
-
-  net.setTrustAnchors(&cert);
-  net.setClientRSACert(&client_crt, &key);
+  loadCertificates();
 
   client.setServer(MQTT_HOST, MQTT_PORT);
   client.setCallback(messageReceivedCallback);
