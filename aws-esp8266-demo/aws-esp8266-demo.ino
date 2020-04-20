@@ -2,7 +2,6 @@
 #include <WiFiClientSecure.h>
 #include <PubSubClient.h>
 #include <time.h>
-#define emptyString String()
 
 //Follow instructions from https://github.com/debsahu/ESP-MQTT-AWS-IoT-Core/blob/master/doc/README.md
 //Enter values in secrets.h ▼
@@ -113,17 +112,17 @@ void connectToMqtt(bool nonBlocking = false)
   }
 }
 
-void connectToWiFi(String init_str)
+void waitUntilWifiConnected(String message)
 {
-  if (init_str != emptyString)
-    Serial.print(init_str);
+  Serial.print(message);
+
   while (WiFi.status() != WL_CONNECTED)
   {
     Serial.print(".");
     delay(1000);
   }
-  if (init_str != emptyString)
-    Serial.println("ok!");
+
+  Serial.println("ok!");
 }
 
 void updateDeviceShadow(const char * key, long value)
@@ -146,7 +145,7 @@ void setup()
   WiFi.hostname(THINGNAME);
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, pass);
-  connectToWiFi(String("Attempting to connect to SSID: ") + String(ssid));
+  waitUntilWifiConnected(String("Attempting to connect to SSID: ") + String(ssid));
 
   NTPConnect();
 
@@ -169,7 +168,7 @@ void loop()
 
   if (!client.connected())
   {
-    connectToWiFi("Checking WiFi");
+    waitUntilWifiConnected("Checking WiFi");
     connectToMqtt();
   }
   else
