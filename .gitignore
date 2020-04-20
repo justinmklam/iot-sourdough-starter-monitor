@@ -1,0 +1,8 @@
+# Certificates
+*.pem.key
+*.crt
+*.pem
+*.csv
+
+# Binary SSL files
+*.der
