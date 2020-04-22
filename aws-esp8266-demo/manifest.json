@@ -1,0 +1,12 @@
+{
+    "fileLocations":[
+       {
+          "URIPrefixes":[
+             "s3://levain-monitor-data/"
+          ]
+       }
+    ],
+    "globalUploadSettings":{
+       "format":"JSON"
+    }
+ }
