@@ -2,6 +2,7 @@
 #include <WiFiClientSecure.h>
 #include <PubSubClient.h>
 #include <time.h>
+#include <ArduinoJson.h>
 #include "FS.h"
 
 //Follow instructions from https://github.com/debsahu/ESP-MQTT-AWS-IoT-Core/blob/master/doc/README.md
@@ -10,7 +11,8 @@
 
 const int MQTT_PORT = 8883;
 const char MQTT_SUB_TOPIC[] = "$aws/things/" THINGNAME "/shadow/update";
-const char MQTT_PUB_TOPIC[] = "$aws/things/" THINGNAME "/shadow/update";
+// const char MQTT_PUB_TOPIC[] = "$aws/things/" THINGNAME "/shadow/update";
+const char MQTT_PUB_TOPIC[] = "esp8266/data";
 
 WiFiClientSecure net;
 PubSubClient client(net);
@@ -185,10 +187,21 @@ void loadCertificates(void) {
     Serial.println("ca failed");
 }
 
-void updateDeviceShadow(const char *key, long value)
+void publishMessage()
 {
-  char msg[50];
-  snprintf(msg, 50, "{\"state\":{\"reported\": {\"%s\": %ld}}}", key, value);
+  // Get current timestamp (ie. "Tue Apr 21 21:30:31 2020\n")
+  struct tm timeinfo;
+  time_t now = time(nullptr);
+  gmtime_r(&now, &timeinfo);
+
+  StaticJsonDocument<200> doc;
+  doc["time"] = asctime(&timeinfo);
+  doc["temperature"] = random(100);
+  doc["humidity"] = random(100);
+  doc["distance"] = random(100);
+
+  char msg[measureJson(doc) + 1];
+  serializeJson(doc, msg, sizeof(msg));
 
   Serial.printf("Sending  [%s]: ", MQTT_PUB_TOPIC);
   Serial.println(msg);
@@ -232,7 +245,7 @@ void loop()
     if (millis() - lastMillis > 5000)
     {
       lastMillis = millis();
-      updateDeviceShadow("value", random(100));
+      publishMessage();
     }
   }
 }
