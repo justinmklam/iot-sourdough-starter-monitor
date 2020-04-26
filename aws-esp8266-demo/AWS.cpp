@@ -53,6 +53,12 @@ bool AwsIot::connected()
 
 void AwsIot::connect()
 {
+  if (thingname == NULL)
+  {
+    Serial.println("ERROR: Please set a thingname before connecting to MQTT.");
+    return;
+  }
+
   Serial.print("MQTT connecting... ");
   while (!client->connected())
   {
@@ -133,6 +139,12 @@ void AwsIot::loadCertificates(const BearSSL::X509List *cert, const BearSSL::X509
 
 void AwsIot::publishMessage(StaticJsonDocument<200> doc)
 {
+  if (publishTopic == NULL)
+  {
+    Serial.println("WARNING: Please set a publish topic.");
+    return;
+  }
+
   char msg[measureJson(doc) + 1];
   serializeJson(doc, msg, sizeof(msg));
 
@@ -145,6 +157,12 @@ void AwsIot::publishMessage(StaticJsonDocument<200> doc)
 
 void AwsIot::updateDeviceShadow(const char *message)
 {
+  if (shadowTopic == NULL)
+  {
+    Serial.println("WARNING: Please set a shadow topic.");
+    return;
+  }
+
   Serial.printf("Sending [%s]: ", shadowTopic);
   Serial.println(message);
 
