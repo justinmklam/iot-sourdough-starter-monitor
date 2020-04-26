@@ -4,14 +4,7 @@
 #include <ArduinoJson.h>
 #include "FS.h"
 
-// //Follow instructions from https://github.com/debsahu/ESP-MQTT-AWS-IoT-Core/blob/master/doc/README.md
-// //Enter values in secrets.h ▼
-// #include "secrets.h"
-
 const int MQTT_PORT = 8883;
-// const char MQTT_SUB_TOPIC[] = "$aws/things/" "thingname" "/shadow/update";
-// const char MQTT_PUB_TOPIC[] = "$aws/things/" THINGNAME "/shadow/update";
-// const char MQTT_PUB_TOPIC[] = "esp8266/data";
 
 AwsIot::AwsIot()
 {
