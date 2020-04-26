@@ -51,7 +51,16 @@ void setup()
   awsClient.setThingname("levain-monitor");
   awsClient.setPublishTopic("esp8266/data");
   awsClient.setHost("a292sjcsigiv8t-ats.iot.us-west-2.amazonaws.com");
+
+#if LOAD_KEYS_FROM_SPIFFS
   awsClient.loadCertificatesFromSPIFFS();
+#else
+// Load from hardcoded keys
+  BearSSL::X509List cert(cacert);
+  BearSSL::X509List client_crt(client_cert);
+  BearSSL::PrivateKey key(privkey);
+  awsClient.loadCertificates(&cert, &client_crt, &key);
+#endif
 
   // Optional
   awsClient.setShadowTopic("$aws/things/levain-monitor/shadow/update");

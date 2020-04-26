@@ -9,6 +9,8 @@ class AwsIot
 public:
   AwsIot();
   void loadCertificatesFromSPIFFS(void);
+  void loadCertificates(const BearSSL::X509List *cert, const BearSSL::X509List *chain, const BearSSL::PrivateKey *sk);
+
   void setHost(const char *name);
   void setThingname(const char *name);
   void setShadowTopic(const char *topic);

@@ -137,6 +137,14 @@ void AwsIot::loadCertificatesFromSPIFFS(void)
     Serial.println("ERROR");
 }
 
+void AwsIot::loadCertificates(const BearSSL::X509List *cert, const BearSSL::X509List *chain, const BearSSL::PrivateKey *sk)
+{
+  Serial.println("Setting anchors");
+  net->setTrustAnchors(cert);
+  Serial.println("Setting client RSA");
+  net->setClientRSACert(chain, sk);
+}
+
 void AwsIot::publishMessage(StaticJsonDocument<200> doc)
 {
   char msg[measureJson(doc) + 1];
