@@ -81,7 +81,6 @@ void AwsIot::connect()
   }
 }
 
-
 void AwsIot::loadCertificatesFromSPIFFS(void) {
   if (!SPIFFS.begin())
   {
@@ -96,14 +95,14 @@ void AwsIot::loadCertificatesFromSPIFFS(void) {
     Serial.print("ERROR: Failed to open cert file");
   }
   else
-    Serial.print("Success to open cert file... ");
+    Serial.print("Opened cert file... ");
 
   delay(1000);
 
   if (net->loadCertificate(cert))
-    Serial.println("cert loaded!");
+    Serial.println("OK!");
   else
-    Serial.println("ERROR: cert not loaded");
+    Serial.println("ERROR");
 
   // Load private key file
   File private_key = SPIFFS.open("/private.der", "r"); //replace private eith your uploaded file name
@@ -112,14 +111,14 @@ void AwsIot::loadCertificatesFromSPIFFS(void) {
     Serial.print("ERROR: Failed to open private cert file");
   }
   else
-    Serial.print("Success to open private cert file... ");
+    Serial.print("Opened private cert file... ");
 
   delay(1000);
 
   if (net->loadPrivateKey(private_key))
-    Serial.println("private key loaded!");
+    Serial.println("OK!");
   else
-    Serial.println("ERROR: private key not loaded");
+    Serial.println("ERROR");
 
   // Load CA file
   File ca = SPIFFS.open("/ca.der", "r"); //replace ca eith your uploaded file name
@@ -128,14 +127,14 @@ void AwsIot::loadCertificatesFromSPIFFS(void) {
     Serial.print("ERROR: Failed to open ca ");
   }
   else
-    Serial.print("Success to open ca... ");
+    Serial.print("Opened ca file... ");
 
   delay(1000);
 
   if (net->loadCACert(ca))
-    Serial.println("ca loaded!");
+    Serial.println("OK!");
   else
-    Serial.println("ERROR: ca failed");
+    Serial.println("ERROR");
 }
 
 void AwsIot::publishMessage()
