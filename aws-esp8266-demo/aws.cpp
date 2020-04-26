@@ -8,8 +8,8 @@ const int MQTT_PORT = 8883;
 
 AwsIot::AwsIot()
 {
-    net = new WiFiClientSecure();
-    client = new PubSubClient(*net);
+  net = new WiFiClientSecure();
+  client = new PubSubClient(*net);
 }
 
 void AwsIot::pubSubErr(int8_t MQTTErr)
@@ -36,29 +36,29 @@ void AwsIot::pubSubErr(int8_t MQTTErr)
     Serial.print("Connect unauthorized");
 }
 
-void AwsIot::setThingname(const char* name)
+void AwsIot::setThingname(const char *name)
 {
-    thingname = name;
+  thingname = name;
 }
 
-void AwsIot::setShadowTopic(const char* topic)
+void AwsIot::setShadowTopic(const char *topic)
 {
-    shadowTopic = topic;
+  shadowTopic = topic;
 }
 
-void AwsIot::setPublishTopic(const char* topic)
+void AwsIot::setPublishTopic(const char *topic)
 {
-    publishTopic = topic;
+  publishTopic = topic;
 }
 
-void AwsIot::setSubscribeTopic(const char* topic)
+void AwsIot::setSubscribeTopic(const char *topic)
 {
-    subscribeTopic = topic;
+  subscribeTopic = topic;
 }
 
 void AwsIot::setCallback(MQTT_CALLBACK_SIGNATURE)
 {
-    client->setCallback(callback);
+  client->setCallback(callback);
 }
 void AwsIot::connect()
 {
@@ -75,13 +75,14 @@ void AwsIot::connect()
     {
       Serial.print("failed, reason -> ");
       pubSubErr(client->state());
-        Serial.println(" < trying again in 5 seconds...");
-        delay(5000);
+      Serial.println(" < trying again in 5 seconds...");
+      delay(5000);
     }
   }
 }
 
-void AwsIot::loadCertificatesFromSPIFFS(void) {
+void AwsIot::loadCertificatesFromSPIFFS(void)
+{
   if (!SPIFFS.begin())
   {
     Serial.println("ERROR: Failed to mount file system");
@@ -160,7 +161,7 @@ void AwsIot::publishMessage()
     pubSubErr(client->state());
 }
 
-void AwsIot::updateDeviceShadow(const char* message)
+void AwsIot::updateDeviceShadow(const char *message)
 {
   Serial.printf("Sending [%s]: ", shadowTopic);
   Serial.println(message);
@@ -169,17 +170,17 @@ void AwsIot::updateDeviceShadow(const char* message)
     pubSubErr(client->state());
 }
 
-void AwsIot::setHost(const char* name)
+void AwsIot::setHost(const char *name)
 {
-    client->setServer(name, MQTT_PORT);
+  client->setServer(name, MQTT_PORT);
 }
 
 void AwsIot::loop()
 {
-    client->loop();
+  client->loop();
 }
 
 bool AwsIot::connected()
 {
-    return client->connected();
+  return client->connected();
 }
