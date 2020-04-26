@@ -1,6 +1,4 @@
 #pragma once
 
-#define UTC_OFFSET -7
-//#define USE_SUMMER_TIME_DST  //uncomment to use DST
+void NTPConnect(int utc_offset, bool use_daylight_savings);
 
-void NTPConnect(void);

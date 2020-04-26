@@ -3,20 +3,16 @@
 
 #include "ntp.h"
 
-void NTPConnect(void)
+void NTPConnect(int utc_offset, bool use_daylight_savings)
 {
   time_t now;
   time_t nowish = 1510592825;
   struct tm timeinfo;
 
-#ifdef USE_SUMMER_TIME_DST
-  uint8_t DST = 1;
-#else
-  uint8_t DST = 0;
-#endif
+  uint8_t DST = int(use_daylight_savings);
 
   Serial.print("Setting time using SNTP");
-  configTime(UTC_OFFSET * 3600, DST * 3600, "pool.ntp.org", "time.nist.gov");
+  configTime(utc_offset * 3600, DST * 3600, "pool.ntp.org", "time.nist.gov");
   now = time(nullptr);
 
   while (now < nowish)

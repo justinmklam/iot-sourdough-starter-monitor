@@ -45,7 +45,7 @@ void setup()
   WiFi.begin(ssid, pass);
   waitUntilWifiConnected(String("Attempting to connect to SSID: ") + String(ssid));
 
-  NTPConnect();
+  NTPConnect(-7, false);
 
   awsClient.loadCertificatesFromSPIFFS();
   awsClient.setHost(MQTT_HOST);
