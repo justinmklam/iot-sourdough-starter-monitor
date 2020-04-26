@@ -51,7 +51,11 @@ void setup()
   awsClient.setPublishTopic("esp8266/data");
   awsClient.setHost("a292sjcsigiv8t-ats.iot.us-west-2.amazonaws.com");
   awsClient.loadCertificatesFromSPIFFS();
-  // client.setCallback(messageReceivedCallback);
+
+  // Optional
+  awsClient.setShadowTopic("$aws/things/levain-monitor/shadow/update");
+  awsClient.setSubscribeTopic("$aws/things/levain-monitor/shadow/update");
+  awsClient.setCallback(messageReceivedCallback);
 
   awsClient.connect();
 }
@@ -59,6 +63,7 @@ void setup()
 void loop()
 {
   static unsigned long lastMillis = 0;
+  static char shadowMessage[50];
 
   if (!awsClient.connected())
   {
@@ -72,6 +77,9 @@ void loop()
     {
       lastMillis = millis();
       awsClient.publishMessage();
+
+      sprintf(shadowMessage, "{\"state\":{\"reported\": {\"value\": %ld}}}", random(100));
+      awsClient.updateDeviceShadow(shadowMessage);
     }
   }
 }

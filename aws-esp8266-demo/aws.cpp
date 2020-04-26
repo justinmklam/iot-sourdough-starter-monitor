@@ -9,7 +9,7 @@
 // #include "secrets.h"
 
 const int MQTT_PORT = 8883;
-const char MQTT_SUB_TOPIC[] = "$aws/things/" "thingname" "/shadow/update";
+// const char MQTT_SUB_TOPIC[] = "$aws/things/" "thingname" "/shadow/update";
 // const char MQTT_PUB_TOPIC[] = "$aws/things/" THINGNAME "/shadow/update";
 // const char MQTT_PUB_TOPIC[] = "esp8266/data";
 
@@ -48,11 +48,25 @@ void AwsIot::setThingname(const char* name)
     thingname = name;
 }
 
+void AwsIot::setShadowTopic(const char* topic)
+{
+    shadowTopic = topic;
+}
+
 void AwsIot::setPublishTopic(const char* topic)
 {
     publishTopic = topic;
 }
 
+void AwsIot::setSubscribeTopic(const char* topic)
+{
+    subscribeTopic = topic;
+}
+
+void AwsIot::setCallback(MQTT_CALLBACK_SIGNATURE)
+{
+    client->setCallback(callback);
+}
 void AwsIot::connect()
 {
   Serial.print("MQTT connecting... ");
@@ -61,7 +75,7 @@ void AwsIot::connect()
     if (client->connect(thingname))
     {
       Serial.println("connected!");
-      if (!client->subscribe(MQTT_SUB_TOPIC))
+      if (!client->subscribe(subscribeTopic))
         pubSubErr(client->state());
     }
     else
@@ -154,12 +168,19 @@ void AwsIot::publishMessage()
     pubSubErr(client->state());
 }
 
+void AwsIot::updateDeviceShadow(const char* message)
+{
+  Serial.printf("Sending [%s]: ", shadowTopic);
+  Serial.println(message);
+
+  if (!client->publish(shadowTopic, message))
+    pubSubErr(client->state());
+}
+
 void AwsIot::setHost(const char* name)
 {
     client->setServer(name, MQTT_PORT);
 }
-
-// void setCallback()
 
 void AwsIot::loop()
 {
