@@ -3,7 +3,7 @@
 
 #include "NTP.h"
 
-void NTPConnect(int utc_offset, bool use_daylight_savings)
+void configTimeWithNTP(int utc_offset, bool use_daylight_savings)
 {
   time_t now;
   time_t nowish = 1510592825;

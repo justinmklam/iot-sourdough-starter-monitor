@@ -46,7 +46,7 @@ void setup()
   waitUntilWifiConnected(String("Attempting to connect to SSID: ") + String(ssid));
 
   // Pacific standard time = UTC -7
-  NTPConnect(-7, false);
+  configTimeWithNTP(-7, false);
 
   awsClient.setThingname("levain-monitor");
   awsClient.setPublishTopic("esp8266/data");
