@@ -40,15 +40,17 @@ void setup()
   Serial.begin(115200);
   delay(100);
 
-  WiFi.hostname(THINGNAME);
+  WiFi.hostname("levain-monitor");
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, pass);
   waitUntilWifiConnected(String("Attempting to connect to SSID: ") + String(ssid));
 
   NTPConnect(-7, false);
 
+  awsClient.setThingname("levain-monitor");
+  awsClient.setPublishTopic("esp8266/data");
+  awsClient.setHost("a292sjcsigiv8t-ats.iot.us-west-2.amazonaws.com");
   awsClient.loadCertificatesFromSPIFFS();
-  awsClient.setHost(MQTT_HOST);
   // client.setCallback(messageReceivedCallback);
 
   awsClient.connect();

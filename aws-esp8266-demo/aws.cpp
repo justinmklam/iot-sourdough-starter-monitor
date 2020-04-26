@@ -4,14 +4,14 @@
 #include <ArduinoJson.h>
 #include "FS.h"
 
-//Follow instructions from https://github.com/debsahu/ESP-MQTT-AWS-IoT-Core/blob/master/doc/README.md
-//Enter values in secrets.h ▼
-#include "secrets.h"
+// //Follow instructions from https://github.com/debsahu/ESP-MQTT-AWS-IoT-Core/blob/master/doc/README.md
+// //Enter values in secrets.h ▼
+// #include "secrets.h"
 
 const int MQTT_PORT = 8883;
-const char MQTT_SUB_TOPIC[] = "$aws/things/" THINGNAME "/shadow/update";
+const char MQTT_SUB_TOPIC[] = "$aws/things/" "thingname" "/shadow/update";
 // const char MQTT_PUB_TOPIC[] = "$aws/things/" THINGNAME "/shadow/update";
-const char MQTT_PUB_TOPIC[] = "esp8266/data";
+// const char MQTT_PUB_TOPIC[] = "esp8266/data";
 
 AwsIot::AwsIot()
 {
@@ -43,12 +43,22 @@ void AwsIot::pubSubErr(int8_t MQTTErr)
     Serial.print("Connect unauthorized");
 }
 
+void AwsIot::setThingname(const char* name)
+{
+    thingname = name;
+}
+
+void AwsIot::setPublishTopic(const char* topic)
+{
+    publishTopic = topic;
+}
+
 void AwsIot::connect()
 {
-  Serial.print("MQTT connecting ");
+  Serial.print("MQTT connecting... ");
   while (!client->connected())
   {
-    if (client->connect(THINGNAME))
+    if (client->connect(thingname))
     {
       Serial.println("connected!");
       if (!client->subscribe(MQTT_SUB_TOPIC))
@@ -58,7 +68,7 @@ void AwsIot::connect()
     {
       Serial.print("failed, reason -> ");
       pubSubErr(client->state());
-        Serial.println(" < try again in 5 seconds");
+        Serial.println(" < trying again in 5 seconds...");
         delay(5000);
     }
   }
@@ -137,10 +147,10 @@ void AwsIot::publishMessage()
   char msg[measureJson(doc) + 1];
   serializeJson(doc, msg, sizeof(msg));
 
-  Serial.printf("Sending  [%s]: ", MQTT_PUB_TOPIC);
+  Serial.printf("Sending [%s]: ", publishTopic);
   Serial.println(msg);
 
-  if (!client->publish(MQTT_PUB_TOPIC, msg))
+  if (!client->publish(publishTopic, msg))
     pubSubErr(client->state());
 }
 

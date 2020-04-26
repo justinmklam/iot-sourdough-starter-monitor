@@ -9,6 +9,8 @@ public:
     AwsIot();
     void loadCertificatesFromSPIFFS(void);
     void setHost(const char* name);
+    void setThingname(const char* name);
+    void setPublishTopic(const char* name);
     void connect();
     void loop();
     bool connected();
@@ -18,4 +20,7 @@ private:
     PubSubClient *client;
 
     void pubSubErr(int8_t MQTTErr);
+
+    const char* thingname;
+    const char* publishTopic;
 };
