@@ -1,5 +1,6 @@
-#define SECRET
-#define LOAD_KEYS_FROM_SPIFFS true
+#pragma once
+
+#define LOAD_KEYS_FROM_SPIFFS false
 
 const char ssid[] = "mywifi";
 const char pass[] = "mypassword";
