@@ -8,6 +8,7 @@ class AwsIot
 {
 public:
   AwsIot();
+
   void loadCertificatesFromSPIFFS(void);
   void loadCertificates(const BearSSL::X509List *cert, const BearSSL::X509List *chain, const BearSSL::PrivateKey *sk);
 
@@ -17,11 +18,13 @@ public:
   void setPublishTopic(const char *name);
   void setSubscribeTopic(const char *name);
   void setCallback(MQTT_CALLBACK_SIGNATURE);
+
   void updateDeviceShadow(const char *message);
-  void connect();
-  void loop();
-  bool connected();
   void publishMessage(StaticJsonDocument<200> doc);
+
+  void loop();
+  void connect();
+  bool connected();
 
 private:
   WiFiClientSecure *net;

@@ -11,30 +11,6 @@ AwsIot::AwsIot()
   client = new PubSubClient(*net);
 }
 
-void AwsIot::pubSubErr(int8_t MQTTErr)
-{
-  if (MQTTErr == MQTT_CONNECTION_TIMEOUT)
-    Serial.print("Connection tiemout");
-  else if (MQTTErr == MQTT_CONNECTION_LOST)
-    Serial.print("Connection lost");
-  else if (MQTTErr == MQTT_CONNECT_FAILED)
-    Serial.print("Connect failed");
-  else if (MQTTErr == MQTT_DISCONNECTED)
-    Serial.print("Disconnected");
-  else if (MQTTErr == MQTT_CONNECTED)
-    Serial.print("Connected");
-  else if (MQTTErr == MQTT_CONNECT_BAD_PROTOCOL)
-    Serial.print("Connect bad protocol");
-  else if (MQTTErr == MQTT_CONNECT_BAD_CLIENT_ID)
-    Serial.print("Connect bad Client-ID");
-  else if (MQTTErr == MQTT_CONNECT_UNAVAILABLE)
-    Serial.print("Connect unavailable");
-  else if (MQTTErr == MQTT_CONNECT_BAD_CREDENTIALS)
-    Serial.print("Connect bad credentials");
-  else if (MQTTErr == MQTT_CONNECT_UNAUTHORIZED)
-    Serial.print("Connect unauthorized");
-}
-
 void AwsIot::setThingname(const char *name)
 {
   thingname = name;
@@ -59,6 +35,22 @@ void AwsIot::setCallback(MQTT_CALLBACK_SIGNATURE)
 {
   client->setCallback(callback);
 }
+
+void AwsIot::setHost(const char *name)
+{
+  client->setServer(name, MQTT_PORT);
+}
+
+void AwsIot::loop()
+{
+  client->loop();
+}
+
+bool AwsIot::connected()
+{
+  return client->connected();
+}
+
 void AwsIot::connect()
 {
   Serial.print("MQTT connecting... ");
@@ -166,17 +158,26 @@ void AwsIot::updateDeviceShadow(const char *message)
     pubSubErr(client->state());
 }
 
-void AwsIot::setHost(const char *name)
+void AwsIot::pubSubErr(int8_t MQTTErr)
 {
-  client->setServer(name, MQTT_PORT);
-}
-
-void AwsIot::loop()
-{
-  client->loop();
-}
-
-bool AwsIot::connected()
-{
-  return client->connected();
+  if (MQTTErr == MQTT_CONNECTION_TIMEOUT)
+    Serial.print("Connection tiemout");
+  else if (MQTTErr == MQTT_CONNECTION_LOST)
+    Serial.print("Connection lost");
+  else if (MQTTErr == MQTT_CONNECT_FAILED)
+    Serial.print("Connect failed");
+  else if (MQTTErr == MQTT_DISCONNECTED)
+    Serial.print("Disconnected");
+  else if (MQTTErr == MQTT_CONNECTED)
+    Serial.print("Connected");
+  else if (MQTTErr == MQTT_CONNECT_BAD_PROTOCOL)
+    Serial.print("Connect bad protocol");
+  else if (MQTTErr == MQTT_CONNECT_BAD_CLIENT_ID)
+    Serial.print("Connect bad Client-ID");
+  else if (MQTTErr == MQTT_CONNECT_UNAVAILABLE)
+    Serial.print("Connect unavailable");
+  else if (MQTTErr == MQTT_CONNECT_BAD_CREDENTIALS)
+    Serial.print("Connect bad credentials");
+  else if (MQTTErr == MQTT_CONNECT_UNAUTHORIZED)
+    Serial.print("Connect unauthorized");
 }
