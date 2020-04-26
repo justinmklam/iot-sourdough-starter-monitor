@@ -68,7 +68,7 @@ void AwsIot::connect()
     if (client->connect(thingname))
     {
       Serial.println("connected!");
-      if (!client->subscribe(subscribeTopic))
+      if (subscribeTopic != NULL && !client->subscribe(subscribeTopic))
         pubSubErr(client->state());
     }
     else
