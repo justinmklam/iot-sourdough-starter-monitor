@@ -74,59 +74,53 @@ void AwsIot::connect()
 
 void AwsIot::loadCertificatesFromSPIFFS(void)
 {
+  const int num_certs = 3;
+  const char *certs[num_certs];
+  bool load_result = false;
+
+  certs[0] = "/cert.der";
+  certs[1] = "/private.der";
+  certs[2] = "/ca.der";
+
   if (!SPIFFS.begin())
   {
     Serial.println("ERROR: Failed to mount file system");
     return;
   }
 
-  // Load certificate file
-  File cert = SPIFFS.open("/cert.der", "r"); //replace cert.crt eith your uploaded file name
-  if (!cert)
+  for (int i=0; i < num_certs; i++)
   {
-    Serial.print("ERROR: Failed to open cert file");
+    load_result = false;
+    // Load certificate file
+    File cert = SPIFFS.open(certs[i], "r");
+
+    Serial.print(certs[i]);
+    if (!cert)
+      Serial.print(" failed to open...");
+    else
+      Serial.print(" opened... ");
+
+    delay(100);
+
+    switch(i) {
+    case 0:
+      load_result = net->loadCertificate(cert);
+      break;
+    case 1:
+      load_result = net->loadPrivateKey(cert);
+      break;
+    case 2:
+      load_result = net->loadCACert(cert);
+      break;
+    default:
+      Serial.print("No certificate loaded... ");
+    }
+
+    if (load_result)
+      Serial.println("OK!");
+    else
+      Serial.println("ERROR");
   }
-  else
-    Serial.print("Opened cert file... ");
-
-  delay(1000);
-
-  if (net->loadCertificate(cert))
-    Serial.println("OK!");
-  else
-    Serial.println("ERROR");
-
-  // Load private key file
-  File private_key = SPIFFS.open("/private.der", "r"); //replace private eith your uploaded file name
-  if (!private_key)
-  {
-    Serial.print("ERROR: Failed to open private cert file");
-  }
-  else
-    Serial.print("Opened private cert file... ");
-
-  delay(1000);
-
-  if (net->loadPrivateKey(private_key))
-    Serial.println("OK!");
-  else
-    Serial.println("ERROR");
-
-  // Load CA file
-  File ca = SPIFFS.open("/ca.der", "r"); //replace ca eith your uploaded file name
-  if (!ca)
-  {
-    Serial.print("ERROR: Failed to open ca ");
-  }
-  else
-    Serial.print("Opened ca file... ");
-
-  delay(1000);
-
-  if (net->loadCACert(ca))
-    Serial.println("OK!");
-  else
-    Serial.println("ERROR");
 }
 
 void AwsIot::loadCertificates(const BearSSL::X509List *cert, const BearSSL::X509List *chain, const BearSSL::PrivateKey *sk)
