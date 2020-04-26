@@ -75,8 +75,6 @@ void loop()
   static unsigned long lastMillis = 0;
   static StaticJsonDocument<200> publishMessage;
   static char shadowMessage[50];
-  static struct tm timeinfo;
-  static time_t now;
 
   if (!awsClient.connected())
   {
@@ -90,11 +88,7 @@ void loop()
     {
       lastMillis = millis();
 
-      // Get current timestamp (ie. "Tue Apr 21 21:30:31 2020\n")
-      now = time(nullptr);
-      gmtime_r(&now, &timeinfo);
-
-      publishMessage["time"] = asctime(&timeinfo);
+      publishMessage["time"] = getTimestampAscii();
       publishMessage["temperature"] = random(100);
       publishMessage["humidity"] = random(100);
       publishMessage["distance"] = random(100);
