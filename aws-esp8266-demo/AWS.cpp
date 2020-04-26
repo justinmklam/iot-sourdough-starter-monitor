@@ -1,4 +1,4 @@
-#include "aws.h"
+#include "AWS.h"
 
 #include <time.h>
 #include <ArduinoJson.h>

@@ -1,8 +1,8 @@
 #include <ESP8266WiFi.h>
 #include <ArduinoJson.h>
 
-#include "aws.h"
-#include "ntp.h"
+#include "AWS.h"
+#include "NTP.h"
 
 #include "secrets.h"
 

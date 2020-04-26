@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <time.h>
 
-#include "ntp.h"
+#include "NTP.h"
 
 void NTPConnect(int utc_offset, bool use_daylight_savings)
 {
