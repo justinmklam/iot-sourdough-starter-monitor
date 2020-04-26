@@ -1,5 +1,6 @@
 #pragma once
 
+#include <ArduinoJson.h>
 #include <PubSubClient.h>
 #include <WiFiClientSecure.h>
 
@@ -18,7 +19,7 @@ public:
   void connect();
   void loop();
   bool connected();
-  void publishMessage();
+  void publishMessage(StaticJsonDocument<200> doc);
 
 private:
   WiFiClientSecure *net;

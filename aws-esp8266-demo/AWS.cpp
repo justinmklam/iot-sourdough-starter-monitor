@@ -1,7 +1,6 @@
 #include "AWS.h"
 
 #include <time.h>
-#include <ArduinoJson.h>
 #include "FS.h"
 
 const int MQTT_PORT = 8883;
@@ -138,19 +137,8 @@ void AwsIot::loadCertificatesFromSPIFFS(void)
     Serial.println("ERROR");
 }
 
-void AwsIot::publishMessage()
+void AwsIot::publishMessage(StaticJsonDocument<200> doc)
 {
-  // Get current timestamp (ie. "Tue Apr 21 21:30:31 2020\n")
-  struct tm timeinfo;
-  time_t now = time(nullptr);
-  gmtime_r(&now, &timeinfo);
-
-  StaticJsonDocument<200> doc;
-  doc["time"] = asctime(&timeinfo);
-  doc["temperature"] = random(100);
-  doc["humidity"] = random(100);
-  doc["distance"] = random(100);
-
   char msg[measureJson(doc) + 1];
   serializeJson(doc, msg, sizeof(msg));
 
