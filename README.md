@@ -48,6 +48,7 @@ Install the following libraries (Sketch > Include Library > Manage Libraries):
     - [Adafruit SSD1306 2.2.1](https://github.com/adafruit/Adafruit_SSD1306)
 - AWS IOT:
     - [PubSubClient 2.7.0](https://github.com/knolleary/pubsubclient)
+    - [ArduinoJson 6.15.1](https://github.com/bblanchon/ArduinoJson)
 
 ## AWS IoT Certificates
 
