@@ -13,7 +13,8 @@
 
     <!-- Bootstrap core CSS -->
     <!-- <link href="/docs/4.4/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous"> -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
     <link href='https://netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.css' rel='stylesheet'
         type='text/css'>
@@ -26,7 +27,13 @@
     <meta name="msapplication-config" content="/docs/4.4/assets/img/favicons/browserconfig.xml">
     <meta name="theme-color" content="#563d7c">
 
-    <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
+    <!-- Date range picker -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+    <!-- <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script> -->
     <script src='https://d3js.org/d3.v4.min.js' charset='utf-8'></script>
     <script src="static/metricsgraphics.js"></script>
 
@@ -60,6 +67,16 @@
             <p>Use <a href="/docs/4.4/examples/sticky-footer-navbar/">the sticky footer with a fixed navbar</a> if need
                 be, too.</p>
 
+
+            <form>
+                <div class="form-group row text-center">
+                    <label for="inputDateRange" class="col-2 col-form-label text-right">Date Range</label>
+                    <div class="col">
+                        <input class="form-control" id="inputDateRange" type="text" name="datetimes" />
+                    </div>
+                </div>
+            </form>
+
             <div id="ufo-sightings"></div>
 
             <div id="briefing-1"></div>
@@ -73,6 +90,20 @@
         </div>
     </footer>
 
+    <script>
+        $(function () {
+            $('input[name="datetimes"]').daterangepicker({
+                timePicker: true,
+                timePicker24Hour: true,
+                startDate: moment().startOf('hour').subtract(48, 'hour'),
+                endDate: moment(),
+                maxDate: moment(),
+                locale: {
+                    format: 'M/DD HH:mm'
+                }
+            });
+        });
+    </script>
 
     <script type="text/javascript">
         let data = [
