@@ -401,47 +401,53 @@ let data = [
     }
 ]
 
+let charts = {
+    distance: {
+        title: "Distance",
+        description: "The two graphics in this section are linked together. A rollover in one causes a rollover in the other.",
+        data: data,
+        linked: true,
+        width: 600,
+        height: 200,
+        full_width: true,
+        right: 40,
+        xax_count: 4,
+        brush: 'x',
+        target: '#chart-distance'
+    },
+    temperature: {
+        title: "Temperature",
+        description: "Roll over and watch as the graphic to the left triggers.",
+        data: data,
+        linked: true,
+        width: 600,
+        height: 200,
+        full_width: true,
+        color: 'green',
+        right: 40,
+        xax_count: 4,
+        brush: 'x',
+        target: '#chart-temperature'
+    },
+    humidity: {
+        title: "Humidity",
+        description: "Roll over and watch as the graphic to the left triggers.",
+        data: data,
+        linked: true,
+        width: 600,
+        height: 200,
+        full_width: true,
+        color: 'red',
+        right: 40,
+        xax_count: 4,
+        brush: 'x',
+        target: '#chart-humidity'
+    }
+}
+
 data = MG.convert.date(data, 'date');
-const briefing_1 = MG.data_graphic({
-    title: "Distance",
-    description: "The two graphics in this section are linked together. A rollover in one causes a rollover in the other.",
-    data: data,
-    linked: true,
-    width: 600,
-    height: 200,
-    full_width: true,
-    right: 40,
-    xax_count: 4,
-    brush: 'x',
-    target: '#briefing-1'
-});
-MG.data_graphic(briefing_1);
-MG.data_graphic({
-    title: "Temperature",
-    description: "Roll over and watch as the graphic to the left triggers.",
-    data: data,
-    linked: true,
-    width: 600,
-    height: 200,
-    full_width: true,
-    color: 'green',
-    right: 40,
-    xax_count: 4,
-    brush: 'x',
-    target: '#briefing-2'
-});
-MG.data_graphic(briefing_1);
-MG.data_graphic({
-    title: "Humidity",
-    description: "Roll over and watch as the graphic to the left triggers.",
-    data: data,
-    linked: true,
-    width: 600,
-    height: 200,
-    full_width: true,
-    color: 'red',
-    right: 40,
-    xax_count: 4,
-    brush: 'x',
-    target: '#briefing-3'
-});
+const mg_distance = MG.data_graphic(charts.distance);
+MG.data_graphic(mg_distance);
+MG.data_graphic(charts.temperature);
+MG.data_graphic(mg_distance);
+MG.data_graphic(charts.humidity);
