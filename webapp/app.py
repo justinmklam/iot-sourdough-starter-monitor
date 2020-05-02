@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 import pandas as pd
 
 app = Flask(__name__)
@@ -9,8 +9,12 @@ def hello():
     return render_template("index.html")
 
 
-@app.route("/get_data", methods=["GET"])
+@app.route("/get_data", methods=["post"])
 def get_data():
+    start_date, start_time = request.form["start"].split()
+    end_date, end_time = request.form["end"].split()
+
+    print(start_date, start_time)
     df = pd.DataFrame({
         "date": ["2020-01-01", "2020-01-02"],
         "temperature": [1, 2],
