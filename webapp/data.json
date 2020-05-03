@@ -1,0 +1,602 @@
+[
+    {
+        "date": "2014-02-01",
+        "distance": 15000000,
+        "temperature": 15000000,
+        "humidity": 15000000
+    },
+    {
+        "date": "2014-02-02",
+        "distance": 16487625,
+        "temperature": 16487625,
+        "humidity": 16487625
+    },
+    {
+        "date": "2014-02-03",
+        "distance": 17097434,
+        "temperature": 17097434,
+        "humidity": 17097434
+    },
+    {
+        "date": "2014-02-04",
+        "distance": 17694420,
+        "temperature": 17694420,
+        "humidity": 17694420
+    },
+    {
+        "date": "2014-02-05",
+        "distance": 17014381,
+        "temperature": 17014381,
+        "humidity": 17014381
+    },
+    {
+        "date": "2014-02-06",
+        "distance": 15578984,
+        "temperature": 15578984,
+        "humidity": 15578984
+    },
+    {
+        "date": "2014-02-07",
+        "distance": 14718953,
+        "temperature": 14718953,
+        "humidity": 14718953
+    },
+    {
+        "date": "2014-02-08",
+        "distance": 15020669,
+        "temperature": 15020669,
+        "humidity": 15020669
+    },
+    {
+        "date": "2014-02-09",
+        "distance": 13889722,
+        "temperature": 13889722,
+        "humidity": 13889722
+    },
+    {
+        "date": "2014-02-10",
+        "distance": 13979897,
+        "temperature": 13979897,
+        "humidity": 13979897
+    },
+    {
+        "date": "2014-02-11",
+        "distance": 14595566,
+        "temperature": 14595566,
+        "humidity": 14595566
+    },
+    {
+        "date": "2014-02-12",
+        "distance": 14123256,
+        "temperature": 14123256,
+        "humidity": 14123256
+    },
+    {
+        "date": "2014-02-13",
+        "distance": 14083675,
+        "temperature": 14083675,
+        "humidity": 14083675
+    },
+    {
+        "date": "2014-02-14",
+        "distance": 15068426,
+        "temperature": 15068426,
+        "humidity": 15068426
+    },
+    {
+        "date": "2014-02-15",
+        "distance": 15368056,
+        "temperature": 15368056,
+        "humidity": 15368056
+    },
+    {
+        "date": "2014-02-16",
+        "distance": 15277054,
+        "temperature": 15277054,
+        "humidity": 15277054
+    },
+    {
+        "date": "2014-02-17",
+        "distance": 14376243,
+        "temperature": 14376243,
+        "humidity": 14376243
+    },
+    {
+        "date": "2014-02-18",
+        "distance": 13058892,
+        "temperature": 13058892,
+        "humidity": 13058892
+    },
+    {
+        "date": "2014-02-19",
+        "distance": 12367653,
+        "temperature": 12367653,
+        "humidity": 12367653
+    },
+    {
+        "date": "2014-02-20",
+        "distance": 13184423,
+        "temperature": 13184423,
+        "humidity": 13184423
+    },
+    {
+        "date": "2014-02-21",
+        "distance": 14367203,
+        "temperature": 14367203,
+        "humidity": 14367203
+    },
+    {
+        "date": "2014-02-22",
+        "distance": 14656447,
+        "temperature": 14656447,
+        "humidity": 14656447
+    },
+    {
+        "date": "2014-02-23",
+        "distance": 14724526,
+        "temperature": 14724526,
+        "humidity": 14724526
+    },
+    {
+        "date": "2014-02-24",
+        "distance": 14938129,
+        "temperature": 14938129,
+        "humidity": 14938129
+    },
+    {
+        "date": "2014-02-25",
+        "distance": 14205617,
+        "temperature": 14205617,
+        "humidity": 14205617
+    },
+    {
+        "date": "2014-02-26",
+        "distance": 14596607,
+        "temperature": 14596607,
+        "humidity": 14596607
+    },
+    {
+        "date": "2014-02-27",
+        "distance": 13982597,
+        "temperature": 13982597,
+        "humidity": 13982597
+    },
+    {
+        "date": "2014-02-28",
+        "distance": 15107034,
+        "temperature": 15107034,
+        "humidity": 15107034
+    },
+    {
+        "date": "2014-03-01",
+        "distance": 13646739,
+        "temperature": 13646739,
+        "humidity": 13646739
+    },
+    {
+        "date": "2014-03-02",
+        "distance": 14214763,
+        "temperature": 14214763,
+        "humidity": 14214763
+    },
+    {
+        "date": "2014-03-03",
+        "distance": 14952136,
+        "temperature": 14952136,
+        "humidity": 14952136
+    },
+    {
+        "date": "2014-03-04",
+        "distance": 14643933,
+        "temperature": 14643933,
+        "humidity": 14643933
+    },
+    {
+        "date": "2014-03-05",
+        "distance": 13611435,
+        "temperature": 13611435,
+        "humidity": 13611435
+    },
+    {
+        "date": "2014-03-06",
+        "distance": 12569788,
+        "temperature": 12569788,
+        "humidity": 12569788
+    },
+    {
+        "date": "2014-03-07",
+        "distance": 11344469,
+        "temperature": 11344469,
+        "humidity": 11344469
+    },
+    {
+        "date": "2014-03-08",
+        "distance": 12687132,
+        "temperature": 12687132,
+        "humidity": 12687132
+    },
+    {
+        "date": "2014-03-09",
+        "distance": 11831144,
+        "temperature": 11831144,
+        "humidity": 11831144
+    },
+    {
+        "date": "2014-03-10",
+        "distance": 10480837,
+        "temperature": 10480837,
+        "humidity": 10480837
+    },
+    {
+        "date": "2014-03-11",
+        "distance": 9051161,
+        "temperature": 9051161,
+        "humidity": 9051161
+    },
+    {
+        "date": "2014-03-12",
+        "distance": 9964784,
+        "temperature": 9964784,
+        "humidity": 9964784
+    },
+    {
+        "date": "2014-03-13",
+        "distance": 11035006,
+        "temperature": 11035006,
+        "humidity": 11035006
+    },
+    {
+        "date": "2014-03-14",
+        "distance": 10081289,
+        "temperature": 10081289,
+        "humidity": 10081289
+    },
+    {
+        "date": "2014-03-15",
+        "distance": 9793897,
+        "temperature": 9793897,
+        "humidity": 9793897
+    },
+    {
+        "date": "2014-03-16",
+        "distance": 9177447,
+        "temperature": 9177447,
+        "humidity": 9177447
+    },
+    {
+        "date": "2014-03-17",
+        "distance": 8035348,
+        "temperature": 8035348,
+        "humidity": 8035348
+    },
+    {
+        "date": "2014-03-18",
+        "distance": 6770242,
+        "temperature": 6770242,
+        "humidity": 6770242
+    },
+    {
+        "date": "2014-03-19",
+        "distance": 7272077,
+        "temperature": 7272077,
+        "humidity": 7272077
+    },
+    {
+        "date": "2014-03-20",
+        "distance": 8216348,
+        "temperature": 8216348,
+        "humidity": 8216348
+    },
+    {
+        "date": "2014-03-21",
+        "distance": 8576584,
+        "temperature": 8576584,
+        "humidity": 8576584
+    },
+    {
+        "date": "2014-03-22",
+        "distance": 9421060,
+        "temperature": 9421060,
+        "humidity": 9421060
+    },
+    {
+        "date": "2014-03-23",
+        "distance": 10872288,
+        "temperature": 10872288,
+        "humidity": 10872288
+    },
+    {
+        "date": "2014-03-24",
+        "distance": 9537996,
+        "temperature": 9537996,
+        "humidity": 9537996
+    },
+    {
+        "date": "2014-03-25",
+        "distance": 9560363,
+        "temperature": 9560363,
+        "humidity": 9560363
+    },
+    {
+        "date": "2014-03-26",
+        "distance": 8182813,
+        "temperature": 8182813,
+        "humidity": 8182813
+    },
+    {
+        "date": "2014-03-27",
+        "distance": 9068173,
+        "temperature": 9068173,
+        "humidity": 9068173
+    },
+    {
+        "date": "2014-03-28",
+        "distance": 10390251,
+        "temperature": 10390251,
+        "humidity": 10390251
+    },
+    {
+        "date": "2014-03-29",
+        "distance": 9714081,
+        "temperature": 9714081,
+        "humidity": 9714081
+    },
+    {
+        "date": "2014-03-30",
+        "distance": 9994670,
+        "temperature": 9994670,
+        "humidity": 9994670
+    },
+    {
+        "date": "2014-03-31",
+        "distance": 9317878,
+        "temperature": 9317878,
+        "humidity": 9317878
+    },
+    {
+        "date": "2014-04-01",
+        "distance": 8209077,
+        "temperature": 8209077,
+        "humidity": 8209077
+    },
+    {
+        "date": "2014-04-02",
+        "distance": 9230830,
+        "temperature": 9230830,
+        "humidity": 9230830
+    },
+    {
+        "date": "2014-04-03",
+        "distance": 8978342,
+        "temperature": 8978342,
+        "humidity": 8978342
+    },
+    {
+        "date": "2014-04-04",
+        "distance": 8361854,
+        "temperature": 8361854,
+        "humidity": 8361854
+    },
+    {
+        "date": "2014-04-05",
+        "distance": 9345999,
+        "temperature": 9345999,
+        "humidity": 9345999
+    },
+    {
+        "date": "2014-04-06",
+        "distance": 7965407,
+        "temperature": 7965407,
+        "humidity": 7965407
+    },
+    {
+        "date": "2014-04-07",
+        "distance": 8909276,
+        "temperature": 8909276,
+        "humidity": 8909276
+    },
+    {
+        "date": "2014-04-08",
+        "distance": 8935489,
+        "temperature": 8935489,
+        "humidity": 8935489
+    },
+    {
+        "date": "2014-04-09",
+        "distance": 8634997,
+        "temperature": 8634997,
+        "humidity": 8634997
+    },
+    {
+        "date": "2014-04-10",
+        "distance": 8795592,
+        "temperature": 8795592,
+        "humidity": 8795592
+    },
+    {
+        "date": "2014-04-11",
+        "distance": 7513086,
+        "temperature": 7513086,
+        "humidity": 7513086
+    },
+    {
+        "date": "2014-04-12",
+        "distance": 8408561,
+        "temperature": 8408561,
+        "humidity": 8408561
+    },
+    {
+        "date": "2014-04-13",
+        "distance": 7780649,
+        "temperature": 7780649,
+        "humidity": 7780649
+    },
+    {
+        "date": "2014-04-14",
+        "distance": 7524281,
+        "temperature": 7524281,
+        "humidity": 7524281
+    },
+    {
+        "date": "2014-04-15",
+        "distance": 8498062,
+        "temperature": 8498062,
+        "humidity": 8498062
+    },
+    {
+        "date": "2014-04-16",
+        "distance": 7922453,
+        "temperature": 7922453,
+        "humidity": 7922453
+    },
+    {
+        "date": "2014-04-17",
+        "distance": 9304312,
+        "temperature": 9304312,
+        "humidity": 9304312
+    },
+    {
+        "date": "2014-04-18",
+        "distance": 8199457,
+        "temperature": 8199457,
+        "humidity": 8199457
+    },
+    {
+        "date": "2014-04-19",
+        "distance": 8926136,
+        "temperature": 8926136,
+        "humidity": 8926136
+    },
+    {
+        "date": "2014-04-20",
+        "distance": 7558184,
+        "temperature": 7558184,
+        "humidity": 7558184
+    },
+    {
+        "date": "2014-04-21",
+        "distance": 6417511,
+        "temperature": 6417511,
+        "humidity": 6417511
+    },
+    {
+        "date": "2014-04-22",
+        "distance": 5748831,
+        "temperature": 5748831,
+        "humidity": 5748831
+    },
+    {
+        "date": "2014-04-23",
+        "distance": 6503022,
+        "temperature": 6503022,
+        "humidity": 6503022
+    },
+    {
+        "date": "2014-04-24",
+        "distance": 6429606,
+        "temperature": 6429606,
+        "humidity": 6429606
+    },
+    {
+        "date": "2014-04-25",
+        "distance": 5057410,
+        "temperature": 5057410,
+        "humidity": 5057410
+    },
+    {
+        "date": "2014-04-26",
+        "distance": 5924669,
+        "temperature": 5924669,
+        "humidity": 5924669
+    },
+    {
+        "date": "2014-04-27",
+        "distance": 4728239,
+        "temperature": 4728239,
+        "humidity": 4728239
+    },
+    {
+        "date": "2014-04-28",
+        "distance": 3918540,
+        "temperature": 3918540,
+        "humidity": 3918540
+    },
+    {
+        "date": "2014-04-29",
+        "distance": 2821473,
+        "temperature": 2821473,
+        "humidity": 2821473
+    },
+    {
+        "date": "2014-04-30",
+        "distance": 1995781,
+        "temperature": 1995781,
+        "humidity": 1995781
+    },
+    {
+        "date": "2014-05-01",
+        "distance": 1123626,
+        "temperature": 1123626,
+        "humidity": 1123626
+    },
+    {
+        "date": "2014-05-02",
+        "distance": 516067,
+        "temperature": 516067,
+        "humidity": 516067
+    },
+    {
+        "date": "2014-05-03",
+        "distance": 816831,
+        "temperature": 816831,
+        "humidity": 816831
+    },
+    {
+        "date": "2014-05-04",
+        "distance": 816831,
+        "temperature": 816831,
+        "humidity": 816831
+    },
+    {
+        "date": "2014-05-05",
+        "distance": 816831,
+        "temperature": 816831,
+        "humidity": 816831
+    },
+    {
+        "date": "2014-05-06",
+        "distance": 1103818,
+        "temperature": 1103818,
+        "humidity": 1103818
+    },
+    {
+        "date": "2014-05-07",
+        "distance": 958188,
+        "temperature": 958188,
+        "humidity": 958188
+    },
+    {
+        "date": "2014-05-08",
+        "distance": 592995,
+        "temperature": 592995,
+        "humidity": 592995
+    },
+    {
+        "date": "2014-05-09",
+        "distance": 856066,
+        "temperature": 856066,
+        "humidity": 856066
+    },
+    {
+        "date": "2014-05-10",
+        "distance": 1766761,
+        "temperature": 1766761,
+        "humidity": 1766761
+    },
+    {
+        "date": "2014-05-11",
+        "distance": 1330557,
+        "temperature": 1330557,
+        "humidity": 1330557
+    }
+]

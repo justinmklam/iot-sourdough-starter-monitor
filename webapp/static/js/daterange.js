@@ -21,5 +21,13 @@ $('#inputDateRange').on('apply.daterangepicker', function(ev, picker) {
     $.post("/get_data", data)
         .done(function(data){
             console.log(data)
+
+            charts.distance.data = MG.convert.date(JSON.parse(data.distance), 'date');
+            charts.temperature.data = MG.convert.date(JSON.parse(data.temperature), 'date');
+            charts.humidity.data = MG.convert.date(JSON.parse(data.humidity), 'date');
+
+            MG.data_graphic(charts.distance)
+            MG.data_graphic(charts.temperature)
+            MG.data_graphic(charts.humidity)
         })
   });

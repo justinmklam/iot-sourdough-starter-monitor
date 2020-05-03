@@ -400,6 +400,7 @@ let data = [
         "value": 1330557
     }
 ]
+data = MG.convert.date(data, 'date');
 
 let charts = {
     distance: {
@@ -445,7 +446,6 @@ let charts = {
     }
 }
 
-data = MG.convert.date(data, 'date');
 const mg_distance = MG.data_graphic(charts.distance);
 MG.data_graphic(mg_distance);
 MG.data_graphic(charts.temperature);
