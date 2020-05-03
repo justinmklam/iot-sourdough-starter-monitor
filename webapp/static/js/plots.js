@@ -402,47 +402,52 @@ let data = [
 ]
 data = MG.convert.date(data, 'date');
 
+const globals = {
+    width: 600,
+    height: 200
+};
+
 let charts = {
     distance: {
-        title: "Distance",
-        description: "The two graphics in this section are linked together. A rollover in one causes a rollover in the other.",
         data: data,
         linked: true,
-        width: 600,
-        height: 200,
+        width: globals.width,
+        height: globals.height,
         full_width: true,
         right: 40,
         xax_count: 4,
         brush: 'x',
-        target: '#chart-distance'
+        target: '#chart-distance',
+        legend: ['Distance'],
+        legend_target: '#legend-distance'
     },
     temperature: {
-        title: "Temperature",
-        description: "Roll over and watch as the graphic to the left triggers.",
         data: data,
         linked: true,
-        width: 600,
-        height: 200,
+        width: globals.width,
+        height: globals.height,
         full_width: true,
         color: 'green',
         right: 40,
         xax_count: 4,
         brush: 'x',
-        target: '#chart-temperature'
+        target: '#chart-temperature',
+        legend: ['Temperature'],
+        legend_target: '#legend-temperature'
     },
     humidity: {
-        title: "Humidity",
-        description: "Roll over and watch as the graphic to the left triggers.",
         data: data,
         linked: true,
-        width: 600,
-        height: 200,
+        width: globals.width,
+        height: globals.height,
         full_width: true,
         color: 'red',
         right: 40,
         xax_count: 4,
         brush: 'x',
-        target: '#chart-humidity'
+        target: '#chart-humidity',
+        legend: ['Humidity'],
+        legend_target: '#legend-humidity'
     }
 }
 

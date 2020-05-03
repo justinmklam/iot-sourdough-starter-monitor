@@ -129,10 +129,17 @@ html {
     width: 400px;
 }
 
-p {
+p, h1, label, input, footer, span {
     font-family: 'PT Serif', serif;
+}
+p {
     font-size: 1.3rem;
     line-height: 24px;
+}
+
+h1 {
+    font-style: oblique;
+    margin-bottom: 10px;
 }
 
 .pill {
@@ -168,10 +175,6 @@ pre code.hljs {
 
 pre, code, text-area {
     font-family: "Menlo", monospace;
-}
-
-svg {
-    margin-top: 30px;
 }
 
 #table1 .chart_title {
@@ -228,3 +231,15 @@ svg {
   .footer {
     background-color: #f5f5f5;
   }
+
+svg {
+    margin-top: -60px;
+}
+
+#chart-distance {
+    margin-top: 30px
+}
+
+#form-date-range {
+    margin-top: 30px;
+}
