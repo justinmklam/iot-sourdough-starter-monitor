@@ -37,14 +37,25 @@
             <h1 class="mt-5">Diary of a Levain</h1>
             <p class="lead">Sensor data monitored during the fermentation of sourdough starter.</p>
 
-            <form id="form-date-range">
-                <div class="form-group row text-center">
-                    <label for="inputDateRange" class="col-2 col-form-label text-right">Date Range</label>
-                    <div class="col">
-                        <input class="form-control" id="inputDateRange" type="text" name="datetimes" />
-                    </div>
+            <div class="row">
+                <div class="col">
+                    <form id="form-date-range">
+                        <div class="form-group row text-center">
+                            <label for="inputDateRange" class="col-2 col-form-label text-right">Date Range</label>
+                            <div class="col">
+                                <input class="form-control" id="inputDateRange" type="text" name="datetimes" />
+                            </div>
+                        </div>
+                    </form>
                 </div>
-            </form>
+                <div class="col-1">
+                    <form action="/download_csv" method="get">
+                        <button class="btn btn-secondary-outline float-right">
+                            <span class="fa fa-download" aria-hidden="false"></span>
+                        </button>
+                    </form>
+                </div>
+            </div>
 
             <div id="chart-distance"></div>
             <div id="chart-temperature"></div>
