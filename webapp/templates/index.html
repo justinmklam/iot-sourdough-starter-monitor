@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en" class="h-100">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="Justin Lam">
+    <title>Diary of a Levain</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link href='https://netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.css' rel='stylesheet'
+        type='text/css'>
+
+    <link rel="stylesheet" type="text/css" href="static/css/metricsgraphics.css">
+    <link rel="stylesheet" type="text/css" href="static/css/demo.css">
+
+    <!-- Favicons -->
+    <meta name="msapplication-config" content="/docs/4.4/assets/img/favicons/browserconfig.xml">
+    <meta name="theme-color" content="#563d7c">
+
+    <!-- Date range picker -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+    <script src='https://d3js.org/d3.v4.min.js' charset='utf-8'></script>
+    <script src="static/js/metricsgraphics.js"></script>
+</head>
+
+<body class="d-flex flex-column h-100">
+    <!-- Begin page content -->
+    <main role="main" class="flex-shrink-0">
+        <div class="container">
+            <h1 class="mt-5">Diary of a Levain</h1>
+            <p class="lead">Sensor data monitored during the fermentation of sourdough starter.</p>
+
+            <form id="form-date-range">
+                <div class="form-group row text-center">
+                    <label for="inputDateRange" class="col-2 col-form-label text-right">Date Range</label>
+                    <div class="col">
+                        <input class="form-control" id="inputDateRange" type="text" name="datetimes" />
+                    </div>
+                </div>
+            </form>
+
+            <div id="chart-distance"></div>
+            <div id="chart-temperature"></div>
+            <div id="chart-humidity"></div>
+
+            <div class="row">
+                <span class="col text-right" id="legend-distance"></span>
+                <span class="col text-center" id="legend-temperature"></span>
+                <span class="col" id="legend-humidity"></span>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer mt-auto py-3">
+        <div class="container">
+            <span class="text-muted">Place sticky footer content here.</span>
+        </div>
+    </footer>
+
+    <!-- Custom application -->
+    <script src="static/js/plots.js"></script>
+    <script src="static/js/daterange.js"></script>
+
+</body>
+
+</html>
