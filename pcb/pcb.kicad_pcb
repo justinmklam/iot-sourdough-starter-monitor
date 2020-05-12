@@ -2,7 +2,7 @@
 
   (general
     (thickness 1.6)
-    (drawings 0)
+    (drawings 8)
     (tracks 55)
     (zones 0)
     (modules 5)
@@ -570,6 +570,15 @@
     (pad 30 thru_hole circle (at 13.97 -17.78) (size 1.524 1.524) (drill 0.762) (layers *.Cu *.Mask F.SilkS)
       (net 21 "Net-(U1-Pad30)"))
   )
+
+  (gr_arc (start 176.53 124.46) (end 176.53 125.73) (angle -90) (layer Edge.Cuts) (width 0.15))
+  (gr_arc (start 135.89 124.46) (end 134.62 124.46) (angle -90) (layer Edge.Cuts) (width 0.15))
+  (gr_arc (start 135.89 76.2) (end 135.89 74.93) (angle -90) (layer Edge.Cuts) (width 0.15))
+  (gr_arc (start 176.53 76.2) (end 177.8 76.2) (angle -90) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 134.62 124.46) (end 134.62 76.2) (layer Edge.Cuts) (width 0.2))
+  (gr_line (start 176.53 125.73) (end 135.89 125.73) (layer Edge.Cuts) (width 0.2))
+  (gr_line (start 177.8 76.2) (end 177.8 124.46) (layer Edge.Cuts) (width 0.2))
+  (gr_line (start 135.89 74.93) (end 176.53 74.93) (layer Edge.Cuts) (width 0.2))
 
   (segment (start 167.295 87.63) (end 175.26 79.665) (width 0.25) (layer B.Cu) (net 23))
   (segment (start 175.26 79.665) (end 175.26 78.74) (width 0.25) (layer B.Cu) (net 23))
