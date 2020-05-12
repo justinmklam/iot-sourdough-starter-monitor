@@ -11,3 +11,7 @@
 *.der
 
 .vscode/
+
+# Kicad
+*bak
+*.bak
