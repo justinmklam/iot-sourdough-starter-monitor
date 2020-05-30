@@ -160,7 +160,7 @@ void loop()
   else
   {
     awsClient.loop();
-    if (millis() - lastMillisPublish > 5000)
+    if (millis() - lastMillisPublish > 60000)
     {
       lastMillisPublish = millis();
 
