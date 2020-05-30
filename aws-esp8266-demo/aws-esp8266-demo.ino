@@ -71,7 +71,7 @@ void setup()
   dht.temperature().getSensor(&dht_sensor);
 
   // text display big!
-  display.setTextSize(4);
+  display.setTextSize(1);
   display.setTextColor(WHITE);
 
   display.clearDisplay();
@@ -120,7 +120,7 @@ void loop()
   static float temperature = 0;
   static float humidity = 0;
 
-  if (millis() - lastMillisMeasure > 10)
+  if (millis() - lastMillisMeasure > 100)
   {
     lastMillisMeasure = millis();
     range = vl.readRange();
@@ -137,7 +137,11 @@ void loop()
       display.clearDisplay();
       display.setCursor(0,0);
       display.print(range);
-      display.print("mm");
+      display.print("mm,");
+      display.print(temperature);
+      display.print(F("°C,"));
+      display.print(humidity);
+      display.print("%");
       display.display();
     } else {
       display.display();
