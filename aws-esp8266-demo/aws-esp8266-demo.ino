@@ -139,7 +139,7 @@ void loop()
       display.print(range);
       display.print("mm,");
       display.print(temperature);
-      display.print(F("°C,"));
+      display.print("C,");
       display.print(humidity);
       display.print("%");
       display.display();
