@@ -113,7 +113,7 @@ void loop()
 {
   static unsigned long lastMillisPublish = 0;
   static unsigned long lastMillisMeasure = 0;
-  static StaticJsonDocument<200> publishMessage;
+  StaticJsonDocument<200> publishMessage;
   static char shadowMessage[50];
   static uint8_t range = 0;
   static uint8_t status = 0;
