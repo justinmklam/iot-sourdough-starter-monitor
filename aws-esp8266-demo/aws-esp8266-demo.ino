@@ -9,12 +9,20 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 #include "Adafruit_VL6180X.h"
+#include <Adafruit_Sensor.h>
+#include <DHT.h>
+#include <DHT_U.h>
+
 #include "secrets.h"
+
+#define DHTPIN 10
+#define DHTTYPE DHT22
 
 AwsIot awsClient;
 
 Adafruit_VL6180X vl = Adafruit_VL6180X();
 Adafruit_SSD1306 display = Adafruit_SSD1306();
+DHT_Unified dht(DHTPIN, DHTTYPE);
 
 void waitUntilWifiConnected(String message)
 {
@@ -57,6 +65,10 @@ void setup()
     while (1);
   }
   Serial.println("VL6180X sensor found!");
+
+  dht.begin();
+  sensor_t dht_sensor;
+  dht.temperature().getSensor(&dht_sensor);
 
   // text display big!
   display.setTextSize(4);
@@ -105,12 +117,20 @@ void loop()
   static char shadowMessage[50];
   static uint8_t range = 0;
   static uint8_t status = 0;
+  static float temperature = 0;
+  static float humidity = 0;
 
   if (millis() - lastMillisMeasure > 10)
   {
     lastMillisMeasure = millis();
     range = vl.readRange();
     status = vl.readRangeStatus();
+
+    sensors_event_t event;
+    dht.temperature().getEvent(&event);
+    temperature = event.temperature;
+    dht.humidity().getEvent(&event);
+    humidity = event.relative_humidity;
 
     if (status == VL6180X_ERROR_NONE) {
       // Serial.print("Range: "); Serial.println(range);
@@ -141,8 +161,8 @@ void loop()
       lastMillisPublish = millis();
 
       publishMessage["time"] = getTimestampAscii();
-      publishMessage["temperature"] = random(100);
-      publishMessage["humidity"] = random(100);
+      publishMessage["temperature"] = temperature;
+      publishMessage["humidity"] = humidity;
       publishMessage["distance"] = range;
 
       awsClient.publishMessage(publishMessage);
