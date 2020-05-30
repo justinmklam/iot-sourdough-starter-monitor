@@ -4,9 +4,17 @@
 #include "AWS.h"
 #include "NTP.h"
 
+#include <Wire.h>
+#include <SPI.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+#include "Adafruit_VL6180X.h"
 #include "secrets.h"
 
 AwsIot awsClient;
+
+Adafruit_VL6180X vl = Adafruit_VL6180X();
+Adafruit_SSD1306 display = Adafruit_SSD1306();
 
 void waitUntilWifiConnected(String message)
 {
@@ -38,7 +46,26 @@ void messageReceivedCallback(char *topic, byte *payload, unsigned int length)
 void setup()
 {
   Serial.begin(115200);
+  Serial.println("AWS Levain Monitor");
   delay(100);
+
+  display.begin(SSD1306_SWITCHCAPVCC, 0x3C);  // initialize with the I2C addr 0x3C (for the 128x32)
+  display.display();
+
+  if (! vl.begin()) {
+    Serial.println("Failed to find sensor");
+    while (1);
+  }
+  Serial.println("VL6180X sensor found!");
+
+  // text display big!
+  display.setTextSize(4);
+  display.setTextColor(WHITE);
+
+  display.clearDisplay();
+  display.setCursor(0,0);
+  display.print("Starting...");
+  display.display();
 
   WiFi.hostname("levain-monitor");
   WiFi.mode(WIFI_STA);
@@ -63,18 +90,43 @@ void setup()
 #endif
 
   // Optional
-  awsClient.setShadowTopic("$aws/things/levain-monitor/shadow/update");
-  awsClient.setSubscribeTopic("$aws/things/levain-monitor/shadow/update");
-  awsClient.setCallback(messageReceivedCallback);
+  // awsClient.setShadowTopic("$aws/things/levain-monitor/shadow/update");
+  // awsClient.setSubscribeTopic("$aws/things/levain-monitor/shadow/update");
+  // awsClient.setCallback(messageReceivedCallback);
 
   awsClient.connect();
 }
 
 void loop()
 {
-  static unsigned long lastMillis = 0;
+  static unsigned long lastMillisPublish = 0;
+  static unsigned long lastMillisMeasure = 0;
   static StaticJsonDocument<200> publishMessage;
   static char shadowMessage[50];
+  static uint8_t range = 0;
+  static uint8_t status = 0;
+
+  if (millis() - lastMillisMeasure > 10)
+  {
+    lastMillisMeasure = millis();
+    range = vl.readRange();
+    status = vl.readRangeStatus();
+
+    if (status == VL6180X_ERROR_NONE) {
+      // Serial.print("Range: "); Serial.println(range);
+      display.clearDisplay();
+      display.setCursor(0,0);
+      display.print(range);
+      display.print("mm");
+      display.display();
+    } else {
+      display.display();
+      display.clearDisplay();
+      // Serial.print("Error reading VL6180X, code: ");
+      // Serial.println(status);
+      // return;
+    }
+  }
 
   if (!awsClient.connected())
   {
@@ -84,19 +136,19 @@ void loop()
   else
   {
     awsClient.loop();
-    if (millis() - lastMillis > 5000)
+    if (millis() - lastMillisPublish > 5000)
     {
-      lastMillis = millis();
+      lastMillisPublish = millis();
 
       publishMessage["time"] = getTimestampAscii();
       publishMessage["temperature"] = random(100);
       publishMessage["humidity"] = random(100);
-      publishMessage["distance"] = random(100);
+      publishMessage["distance"] = range;
 
       awsClient.publishMessage(publishMessage);
 
-      sprintf(shadowMessage, "{\"state\":{\"reported\": {\"value\": %ld}}}", random(100));
-      awsClient.updateDeviceShadow(shadowMessage);
+      // sprintf(shadowMessage, "{\"state\":{\"reported\": {\"range\": %ld}}}", range);
+      // awsClient.updateDeviceShadow(shadowMessage);
     }
   }
 }
