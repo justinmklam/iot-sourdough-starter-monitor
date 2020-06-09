@@ -4,19 +4,19 @@ Internet connected sourdough starter monitor. Tracks fermentation with distance,
 
 <p align="center">
     <img src="docs/webapp.gif"><br>
-    <i>Screencap of web app</i>
+    <i>Web app demo with dummy data.</i>
 </p>
 
 
 <p align="center">
     <img src="docs/kicad.png"><br>
-    <i>PCB schematic and layout</i>
+    <i>PCB schematic and layout in KiCad.</i>
 </p>
 
 
 <p align="center">
     <img src="docs/pcb.png"><br>
-    <i>Assembled PCB</i>
+    <i>Assembled PCB.</i>
 </p>
 
 ## Hardware
