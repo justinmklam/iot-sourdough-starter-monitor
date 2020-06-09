@@ -44,6 +44,16 @@ For the VL6180X and SSD1306:
 | SDA | D2 (GPIO 4) |
 | GND | GND |
 
+## Software
+
+AWS is used as the cloud backend. Data flow is as follows:
+
+- ESP8266 sends sensor data over MQTT
+- Kinesis Firehose receives data
+- Lambda function puts data from Firehose to S3 on data receive event
+- Web app queries S3 data via Athena
+
+
 ## Getting Started
 
 Add the ESP8266 board to Arduino IDE (Files > Preferences, then paste the URL in `Additional Boards Manager`):
