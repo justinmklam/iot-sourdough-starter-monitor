@@ -71,7 +71,7 @@ void setup()
   dht.temperature().getSensor(&dht_sensor);
 
   // text display big!
-  display.setTextSize(4);
+  display.setTextSize(1);
   display.setTextColor(WHITE);
 
   display.clearDisplay();
@@ -113,14 +113,14 @@ void loop()
 {
   static unsigned long lastMillisPublish = 0;
   static unsigned long lastMillisMeasure = 0;
-  static StaticJsonDocument<200> publishMessage;
+  StaticJsonDocument<200> publishMessage;
   static char shadowMessage[50];
   static uint8_t range = 0;
   static uint8_t status = 0;
   static float temperature = 0;
   static float humidity = 0;
 
-  if (millis() - lastMillisMeasure > 10)
+  if (millis() - lastMillisMeasure > 100)
   {
     lastMillisMeasure = millis();
     range = vl.readRange();
@@ -137,7 +137,11 @@ void loop()
       display.clearDisplay();
       display.setCursor(0,0);
       display.print(range);
-      display.print("mm");
+      display.print("mm,");
+      display.print(temperature);
+      display.print("C,");
+      display.print(humidity);
+      display.print("%");
       display.display();
     } else {
       display.display();
@@ -156,7 +160,7 @@ void loop()
   else
   {
     awsClient.loop();
-    if (millis() - lastMillisPublish > 5000)
+    if (millis() - lastMillisPublish > 60000)
     {
       lastMillisPublish = millis();
 

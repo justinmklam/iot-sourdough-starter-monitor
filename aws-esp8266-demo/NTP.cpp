@@ -31,8 +31,8 @@ void configTimeWithNTP(int utc_offset, bool use_daylight_savings)
 
 char *getTimestampAscii(void)
 {
-  struct tm timeinfo;
-  time_t now;
+  static struct tm timeinfo;
+  static time_t now;
 
   // Get current timestamp (ie. "Tue Apr 21 21:30:31 2020\n")
   now = time(nullptr);
