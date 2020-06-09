@@ -2,6 +2,23 @@
 
 Internet connected sourdough starter monitor. Tracks fermentation with distance, temperature, and humidity sensors, and publishes data to the cloud.
 
+<p align="center">
+    <img src="docs/webapp.gif"><br>
+    <i>Screencap of web app</i>
+</p>
+
+
+<p align="center">
+    <img src="docs/kicad.png"><br>
+    <i>PCB schematic and layout</i>
+</p>
+
+
+<p align="center">
+    <img src="docs/pcb.png"><br>
+    <i>Assembled PCB</i>
+</p>
+
 ## Hardware
 
 - NodeMCU ESP8266 (aka NodeMCU 1.0 ESP-12E)
