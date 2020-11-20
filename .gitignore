@@ -15,3 +15,6 @@
 # Kicad
 *bak
 *.zip
+
+# PlatformIO
+.pio
