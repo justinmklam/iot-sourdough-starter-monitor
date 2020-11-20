@@ -18,12 +18,18 @@
 #define DHTPIN 10
 #define DHTTYPE DHT22
 
+// If false, device will be standalone/offline
+#define ENABLE_IOT false
+
+#if ENABLE_IOT
 AwsIot awsClient;
+#endif
 
 Adafruit_VL6180X vl = Adafruit_VL6180X();
 Adafruit_SSD1306 display = Adafruit_SSD1306();
 DHT_Unified dht(DHTPIN, DHTTYPE);
 
+#if ENABLE_IOT
 void waitUntilWifiConnected(String message)
 {
   Serial.print(message);
@@ -50,6 +56,7 @@ void messageReceivedCallback(char *topic, byte *payload, unsigned int length)
 
   Serial.println();
 }
+#endif
 
 void setup()
 {
@@ -79,6 +86,7 @@ void setup()
   display.print("Starting...");
   display.display();
 
+#if ENABLE_IOT
   WiFi.hostname("levain-monitor");
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, pass);
@@ -107,14 +115,17 @@ void setup()
   // awsClient.setCallback(messageReceivedCallback);
 
   awsClient.connect();
+#endif
 }
 
 void loop()
 {
-  static unsigned long lastMillisPublish = 0;
   static unsigned long lastMillisMeasure = 0;
+#if ENABLE_IOT
+  static unsigned long lastMillisPublish = 0;
   StaticJsonDocument<200> publishMessage;
   static char shadowMessage[50];
+#endif
   static uint8_t range = 0;
   static uint8_t status = 0;
   static float temperature = 0;
@@ -152,6 +163,7 @@ void loop()
     }
   }
 
+#if ENABLE_IOT
   if (!awsClient.connected())
   {
     waitUntilWifiConnected("Checking WiFi");
@@ -175,4 +187,5 @@ void loop()
       // awsClient.updateDeviceShadow(shadowMessage);
     }
   }
+#endif
 }
