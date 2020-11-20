@@ -74,6 +74,16 @@ To view the serial monitor:
 pio device monitor -b 115200
 ```
 
+To run the tests:
+
+```bash
+# Run tests on device
+pio test
+
+# Run tests locally
+pio test -e native
+```
+
 Dependencies (specified in `platformio.ini`):
 
 - Sensors
