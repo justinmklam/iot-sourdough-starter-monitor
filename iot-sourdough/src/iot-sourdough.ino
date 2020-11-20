@@ -143,24 +143,23 @@ void loop()
     dht.humidity().getEvent(&event);
     humidity = event.relative_humidity;
 
+    display.clearDisplay();
+    display.setCursor(0,0);
     if (status == VL6180X_ERROR_NONE) {
       // Serial.print("Range: "); Serial.println(range);
-      display.clearDisplay();
-      display.setCursor(0,0);
       display.print(range);
-      display.print("mm,");
-      display.print(temperature);
-      display.print("C,");
-      display.print(humidity);
-      display.print("%");
-      display.display();
+      display.print("mm\n");
     } else {
-      display.display();
-      display.clearDisplay();
+      display.print("n/a\n");
       // Serial.print("Error reading VL6180X, code: ");
       // Serial.println(status);
       // return;
     }
+    display.print(temperature);
+    display.print("C\n");
+    display.print(humidity);
+    display.print("%");
+    display.display();
   }
 
 #if ENABLE_IOT
