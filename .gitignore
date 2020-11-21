@@ -11,6 +11,7 @@
 *.der
 
 .vscode/
+.mypy_cache/
 
 # Kicad
 *bak
