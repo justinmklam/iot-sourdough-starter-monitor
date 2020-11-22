@@ -1,5 +1,6 @@
 #include <ESP8266WiFi.h>
 #include <ArduinoJson.h>
+#include <TaskScheduler.h>
 
 #include <AWS.h>
 #include <NTP.h>
@@ -25,9 +26,22 @@
 AwsIot awsClient;
 #endif
 
+void tMeasureCallback();
+void tDisplayCallback();
+
+Task tMeasure(250, TASK_FOREVER, &tMeasureCallback);
+Task tDisplay(250, TASK_FOREVER, &tDisplayCallback);
+
+Scheduler taskManager;
+
 Adafruit_VL6180X vl = Adafruit_VL6180X();
 Adafruit_SSD1306 display = Adafruit_SSD1306();
 DHT_Unified dht(DHTPIN, DHTTYPE);
+
+uint8_t range = 0;
+uint8_t status = 0;
+float temperature = 0;
+float humidity = 0;
 
 #if ENABLE_IOT
 void waitUntilWifiConnected(String message)
@@ -86,6 +100,12 @@ void setup()
   display.print("Starting...");
   display.display();
 
+  taskManager.init();
+  taskManager.addTask(tMeasure);
+  taskManager.addTask(tDisplay);
+  tMeasure.enable();
+  tDisplay.enable();
+
 #if ENABLE_IOT
   WiFi.hostname("levain-monitor");
   WiFi.mode(WIFI_STA);
@@ -118,33 +138,29 @@ void setup()
 #endif
 }
 
-void loop()
-{
-  static unsigned long lastMillisMeasure = 0;
-#if ENABLE_IOT
-  static unsigned long lastMillisPublish = 0;
-  StaticJsonDocument<200> publishMessage;
-  static char shadowMessage[50];
-#endif
-  static uint8_t range = 0;
-  static uint8_t status = 0;
-  static float temperature = 0;
-  static float humidity = 0;
+void tMeasureCallback() {
 
-  if (millis() - lastMillisMeasure > 100)
-  {
-    lastMillisMeasure = millis();
-    range = vl.readRange();
-    status = vl.readRangeStatus();
+  range = vl.readRange();
+  status = vl.readRangeStatus();
 
-    sensors_event_t event;
-    dht.temperature().getEvent(&event);
-    temperature = event.temperature;
-    dht.humidity().getEvent(&event);
-    humidity = event.relative_humidity;
+  sensors_event_t event;
+  dht.temperature().getEvent(&event);
+  temperature = event.temperature;
+  dht.humidity().getEvent(&event);
+  humidity = event.relative_humidity;
 
+  Serial.print(range);
+  Serial.print("mm, ");
+  Serial.print(temperature);
+  Serial.print("C, ");
+  Serial.print(humidity);
+  Serial.print("%\n");
+}
+
+void tDisplayCallback() {
     display.clearDisplay();
     display.setCursor(0,0);
+
     if (status == VL6180X_ERROR_NONE) {
       // Serial.print("Range: "); Serial.println(range);
       display.print(range);
@@ -155,36 +171,84 @@ void loop()
       // Serial.println(status);
       // return;
     }
+
     display.print(temperature);
     display.print("C\n");
     display.print(humidity);
     display.print("%");
     display.display();
-  }
-
-#if ENABLE_IOT
-  if (!awsClient.connected())
-  {
-    waitUntilWifiConnected("Checking WiFi");
-    awsClient.connect();
-  }
-  else
-  {
-    awsClient.loop();
-    if (millis() - lastMillisPublish > 60000)
-    {
-      lastMillisPublish = millis();
-
-      publishMessage["time"] = getTimestampAscii();
-      publishMessage["temperature"] = temperature;
-      publishMessage["humidity"] = humidity;
-      publishMessage["distance"] = range;
-
-      awsClient.publishMessage(publishMessage);
-
-      // sprintf(shadowMessage, "{\"state\":{\"reported\": {\"range\": %ld}}}", range);
-      // awsClient.updateDeviceShadow(shadowMessage);
-    }
-  }
-#endif
 }
+
+void loop() {
+  taskManager.execute();
+}
+// void loop()
+// {
+//   static unsigned long lastMillisMeasure = 0;
+// #if ENABLE_IOT
+//   static unsigned long lastMillisPublish = 0;
+//   StaticJsonDocument<200> publishMessage;
+//   static char shadowMessage[50];
+// #endif
+//   static uint8_t range = 0;
+//   static uint8_t status = 0;
+//   static float temperature = 0;
+//   static float humidity = 0;
+
+//   if (millis() - lastMillisMeasure > 100)
+//   {
+//     lastMillisMeasure = millis();
+//     range = vl.readRange();
+//     status = vl.readRangeStatus();
+
+//     sensors_event_t event;
+//     dht.temperature().getEvent(&event);
+//     temperature = event.temperature;
+//     dht.humidity().getEvent(&event);
+//     humidity = event.relative_humidity;
+
+//     display.clearDisplay();
+//     display.setCursor(0,0);
+//     if (status == VL6180X_ERROR_NONE) {
+//       // Serial.print("Range: "); Serial.println(range);
+//       display.print(range);
+//       display.print("mm\n");
+//     } else {
+//       display.print("n/a\n");
+//       // Serial.print("Error reading VL6180X, code: ");
+//       // Serial.println(status);
+//       // return;
+//     }
+//     display.print(temperature);
+//     display.print("C\n");
+//     display.print(humidity);
+//     display.print("%");
+//     display.display();
+//   }
+
+// #if ENABLE_IOT
+//   if (!awsClient.connected())
+//   {
+//     waitUntilWifiConnected("Checking WiFi");
+//     awsClient.connect();
+//   }
+//   else
+//   {
+//     awsClient.loop();
+//     if (millis() - lastMillisPublish > 60000)
+//     {
+//       lastMillisPublish = millis();
+
+//       publishMessage["time"] = getTimestampAscii();
+//       publishMessage["temperature"] = temperature;
+//       publishMessage["humidity"] = humidity;
+//       publishMessage["distance"] = range;
+
+//       awsClient.publishMessage(publishMessage);
+
+//       // sprintf(shadowMessage, "{\"state\":{\"reported\": {\"range\": %ld}}}", range);
+//       // awsClient.updateDeviceShadow(shadowMessage);
+//     }
+//   }
+// #endif
+// }
