@@ -4,6 +4,7 @@
 #include <DHT_U.h>
 
 #include "measurements.h"
+#include "globals.h"
 
 #define DHTPIN 10
 #define DHTTYPE DHT22
@@ -42,5 +43,3 @@ void tMeasureCallback() {
   Serial.print(measurements.humidity);
   Serial.print("%\n");
 }
-
-
