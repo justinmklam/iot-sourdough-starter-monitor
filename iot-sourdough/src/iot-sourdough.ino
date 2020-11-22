@@ -38,10 +38,14 @@ Adafruit_VL6180X vl = Adafruit_VL6180X();
 Adafruit_SSD1306 display = Adafruit_SSD1306();
 DHT_Unified dht(DHTPIN, DHTTYPE);
 
-uint8_t range = 0;
-uint8_t status = 0;
-float temperature = 0;
-float humidity = 0;
+typedef struct Measurements {
+  uint8_t range = 0;
+  uint8_t status = 0;
+  float temperature = 0;
+  float humidity = 0;
+} Measurements;
+
+Measurements measurements;
 
 #if ENABLE_IOT
 void waitUntilWifiConnected(String message)
@@ -139,21 +143,20 @@ void setup()
 }
 
 void tMeasureCallback() {
-
-  range = vl.readRange();
-  status = vl.readRangeStatus();
+  measurements.range = vl.readRange();
+  measurements.status = vl.readRangeStatus();
 
   sensors_event_t event;
   dht.temperature().getEvent(&event);
-  temperature = event.temperature;
+  measurements.temperature = event.temperature;
   dht.humidity().getEvent(&event);
-  humidity = event.relative_humidity;
+  measurements.humidity = event.relative_humidity;
 
-  Serial.print(range);
+  Serial.print(measurements.range);
   Serial.print("mm, ");
-  Serial.print(temperature);
+  Serial.print(measurements.temperature);
   Serial.print("C, ");
-  Serial.print(humidity);
+  Serial.print(measurements.humidity);
   Serial.print("%\n");
 }
 
@@ -161,9 +164,9 @@ void tDisplayCallback() {
     display.clearDisplay();
     display.setCursor(0,0);
 
-    if (status == VL6180X_ERROR_NONE) {
+    if (measurements.status == VL6180X_ERROR_NONE) {
       // Serial.print("Range: "); Serial.println(range);
-      display.print(range);
+      display.print(measurements.range);
       display.print("mm\n");
     } else {
       display.print("n/a\n");
@@ -172,9 +175,9 @@ void tDisplayCallback() {
       // return;
     }
 
-    display.print(temperature);
+    display.print(measurements.temperature);
     display.print("C\n");
-    display.print(humidity);
+    display.print(measurements.humidity);
     display.print("%");
     display.display();
 }
