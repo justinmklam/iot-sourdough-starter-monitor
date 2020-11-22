@@ -4,7 +4,6 @@
 #include <DHT_U.h>
 
 #include "measurements.h"
-#include "globals.h"
 
 #define DHTPIN 10
 #define DHTTYPE DHT22
