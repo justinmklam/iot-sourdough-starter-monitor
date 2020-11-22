@@ -5,19 +5,9 @@
 #include <AWS.h>
 #include <NTP.h>
 
-#include <Wire.h>
-#include <SPI.h>
-#include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h>
-#include "Adafruit_VL6180X.h"
-#include <Adafruit_Sensor.h>
-#include <DHT.h>
-#include <DHT_U.h>
-
+#include "display.h"
+#include "measurements.h"
 #include "secrets.h"
-
-#define DHTPIN 10
-#define DHTTYPE DHT22
 
 // If false, device will be standalone/offline
 #define ENABLE_IOT false
@@ -26,26 +16,10 @@
 AwsIot awsClient;
 #endif
 
-void tMeasureCallback();
-void tDisplayCallback();
-
-Task tMeasure(250, TASK_FOREVER, &tMeasureCallback);
+Task tMeasure(100, TASK_FOREVER, &tMeasureCallback);
 Task tDisplay(250, TASK_FOREVER, &tDisplayCallback);
 
 Scheduler taskManager;
-
-Adafruit_VL6180X vl = Adafruit_VL6180X();
-Adafruit_SSD1306 display = Adafruit_SSD1306();
-DHT_Unified dht(DHTPIN, DHTTYPE);
-
-typedef struct Measurements {
-  uint8_t range = 0;
-  uint8_t status = 0;
-  float temperature = 0;
-  float humidity = 0;
-} Measurements;
-
-Measurements measurements;
 
 #if ENABLE_IOT
 void waitUntilWifiConnected(String message)
@@ -82,27 +56,8 @@ void setup()
   Serial.println("AWS Levain Monitor");
   delay(100);
 
-  display.begin(SSD1306_SWITCHCAPVCC, 0x3C);  // initialize with the I2C addr 0x3C (for the 128x32)
-  display.display();
-
-  if (! vl.begin()) {
-    Serial.println("Failed to find sensor");
-    while (1);
-  }
-  Serial.println("VL6180X sensor found!");
-
-  dht.begin();
-  sensor_t dht_sensor;
-  dht.temperature().getSensor(&dht_sensor);
-
-  // text display big!
-  display.setTextSize(1);
-  display.setTextColor(WHITE);
-
-  display.clearDisplay();
-  display.setCursor(0,0);
-  display.print("Starting...");
-  display.display();
+  initializeMeasurements();
+  initializeDisplay();
 
   taskManager.init();
   taskManager.addTask(tMeasure);
@@ -140,46 +95,6 @@ void setup()
 
   awsClient.connect();
 #endif
-}
-
-void tMeasureCallback() {
-  measurements.range = vl.readRange();
-  measurements.status = vl.readRangeStatus();
-
-  sensors_event_t event;
-  dht.temperature().getEvent(&event);
-  measurements.temperature = event.temperature;
-  dht.humidity().getEvent(&event);
-  measurements.humidity = event.relative_humidity;
-
-  Serial.print(measurements.range);
-  Serial.print("mm, ");
-  Serial.print(measurements.temperature);
-  Serial.print("C, ");
-  Serial.print(measurements.humidity);
-  Serial.print("%\n");
-}
-
-void tDisplayCallback() {
-    display.clearDisplay();
-    display.setCursor(0,0);
-
-    if (measurements.status == VL6180X_ERROR_NONE) {
-      // Serial.print("Range: "); Serial.println(range);
-      display.print(measurements.range);
-      display.print("mm\n");
-    } else {
-      display.print("n/a\n");
-      // Serial.print("Error reading VL6180X, code: ");
-      // Serial.println(status);
-      // return;
-    }
-
-    display.print(measurements.temperature);
-    display.print("C\n");
-    display.print(measurements.humidity);
-    display.print("%");
-    display.display();
 }
 
 void loop() {
