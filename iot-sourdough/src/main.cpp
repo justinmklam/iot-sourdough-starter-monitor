@@ -2,6 +2,7 @@
 
 #include "display.h"
 #include "measurements.h"
+#include "button.h"
 #include "iot.h"
 
 // If false, device will be standalone/offline
@@ -9,6 +10,7 @@
 
 Task tMeasure(100, TASK_FOREVER, &tMeasureCallback);
 Task tDisplay(250, TASK_FOREVER, &tDisplayCallback);
+Task tButton(100, TASK_FOREVER, &tButtonCallback);
 
 #if ENABLE_IOT
 Task tIoT(5000, TASK_FOREVER, &tIoTCallback);
@@ -24,12 +26,15 @@ void setup()
 
   initializeMeasurements();
   initializeDisplay();
+  initializeButton();
 
   taskManager.init();
   taskManager.addTask(tMeasure);
   taskManager.addTask(tDisplay);
+  taskManager.addTask(tButton);
   tMeasure.enable();
   tDisplay.enable();
+  tButton.enable();
 
 #if ENABLE_IOT
   initializeIoT();
