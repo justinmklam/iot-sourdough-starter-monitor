@@ -18,6 +18,10 @@ PushButton::PushButton(int pin) {
   pinMode(pin, INPUT);
 }
 
+void PushButton::setDebounceDelay(int milliseconds) {
+  debounce_delay = milliseconds;
+}
+
 // Check that the switch is actually pressed for some time to ensure it's not just noise/rattling.
 // Returns true if the switch is pressed, false if not
 bool PushButton::isPressed() {

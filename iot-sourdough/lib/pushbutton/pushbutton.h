@@ -19,4 +19,5 @@ class PushButton{
   public:
     PushButton(int pin);     // constructor to initialize variables
     bool isPressed();  // Returns true if switch is pressed, false if not
+    void setDebounceDelay(int milliseconds);
 };
