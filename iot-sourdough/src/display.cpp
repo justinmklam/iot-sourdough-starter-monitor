@@ -27,20 +27,30 @@ void tDisplayCallback() {
   display.clearDisplay();
   display.setCursor(0,0);
 
-  if (measurements.status == 0) {
-    // Serial.print("Range: "); Serial.println(range);
-    display.print(measurements.range);
-    display.print("mm\n");
-  } else {
-    display.print("n/a\n");
-    // Serial.print("Error reading VL6180X, code: ");
-    // Serial.println(status);
-    // return;
+  // Dummy code to force state change for now
+  if (measurements.range > 100) {
+    setState(2);
   }
 
-  display.print(measurements.temperature);
-  display.print("C\n");
-  display.print(measurements.humidity);
-  display.print("%");
+  switch (getState()) {
+    case STATE_CALIBRATION:
+      display.println("Calibrating");
+      break;
+
+    default:
+      if (measurements.status == 0) {
+        display.print(measurements.range);
+        display.print("mm\n");
+      } else {
+        display.print("n/a\n");
+      }
+
+      display.print(measurements.temperature);
+      display.print("C\n");
+      display.print(measurements.humidity);
+      display.print("%\n");
+      break;
+  }
+  display.println(getState());
   display.display();
 }
