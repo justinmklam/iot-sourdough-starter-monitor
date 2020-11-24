@@ -35,9 +35,21 @@ void tUserInputCallback() {
             Serial.print(pressDuration);
             Serial.println(" ms pressed");
 
-            if (!stateChangeInProgress && userState == STATE_CALIBRATION) {
-                // Short button press exits calibration mode
-                userState = STATE_DEFAULT;
+            if (!stateChangeInProgress) {
+                switch (userState) {
+                    case STATE_CALIBRATION:
+                        // Short button press exits calibration mode
+                        userState = STATE_DEFAULT;
+                        break;
+                    case STATE_DEFAULT:
+                        // Start monitoring
+                        userState = STATE_MONITOR;
+                        break;
+                    case STATE_MONITOR:
+                        // Stop monitoring
+                        userState = STATE_DEFAULT;
+                        break;
+                }
             }
 
             stateChangeInProgress = false;
