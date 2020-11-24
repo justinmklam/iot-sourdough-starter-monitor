@@ -21,14 +21,21 @@ void tButtonCallback() {
 
     if (prevButtonState != buttonState) {
         if (buttonState == HIGH) {
+            // Start of button press
             Serial.println("Pressed");
             pressTimeStart = millis();
         }
         else {
+            // End of button press
             pressDuration = millis() - pressTimeStart;
             Serial.print(pressDuration);
             Serial.println(" ms pressed");
         }
+    }
+    else if (buttonState == HIGH) {
+        // While button is being pressed
+        Serial.print(millis() - pressTimeStart);
+        Serial.println(" ms pressing");
     }
     prevButtonState = buttonState;
 }
