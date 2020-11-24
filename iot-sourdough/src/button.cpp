@@ -4,6 +4,9 @@
 #include "button.h"
 
 #define BUTTON_PIN 9
+#define LONG_PRESS_THRESHOLD_MS 300
+
+int userState = STATE_DEFAULT;
 
 PushButton button(BUTTON_PIN);
 
@@ -34,8 +37,16 @@ void tButtonCallback() {
     }
     else if (buttonState == HIGH) {
         // While button is being pressed
-        Serial.print(millis() - pressTimeStart);
+        pressDuration = millis() - pressTimeStart;
+        Serial.print(pressDuration);
         Serial.println(" ms pressing");
+
+        if (pressDuration >= LONG_PRESS_THRESHOLD_MS) {
+            if (userState != STATE_CALIBRATION) {
+                Serial.println("Entering calibration");
+                userState = STATE_CALIBRATION;
+            }
+        }
     }
     prevButtonState = buttonState;
 }
