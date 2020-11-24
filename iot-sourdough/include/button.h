@@ -2,6 +2,8 @@
 
 void initializeButton();
 void tButtonCallback();
+int getState();
+void setState(int state);
 
 enum States  {
     STATE_DEFAULT,

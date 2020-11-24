@@ -50,3 +50,11 @@ void tButtonCallback() {
     }
     prevButtonState = buttonState;
 }
+
+int getState() {
+    return userState;
+}
+
+void setState(int state) {
+    userState = state;
+}
