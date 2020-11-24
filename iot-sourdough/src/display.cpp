@@ -3,6 +3,7 @@
 
 #include "display.h"
 #include "measurements.h"
+#include "userinput.h"
 
 Adafruit_SSD1306 display = Adafruit_SSD1306();
 

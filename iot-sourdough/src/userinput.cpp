@@ -1,7 +1,7 @@
 #include <Arduino.h>
 
 #include <pushbutton.h>
-#include "button.h"
+#include "userinput.h"
 
 #define BUTTON_PIN 9
 #define LONG_PRESS_THRESHOLD_MS 300
