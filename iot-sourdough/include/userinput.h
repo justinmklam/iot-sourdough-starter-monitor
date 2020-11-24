@@ -1,7 +1,7 @@
 #pragma once
 
 void initializeButton();
-void tButtonCallback();
+void tUserInputCallback();
 int getState();
 void setState(int state);
 

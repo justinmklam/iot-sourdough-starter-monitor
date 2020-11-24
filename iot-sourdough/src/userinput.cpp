@@ -14,7 +14,7 @@ void initializeButton() {
     // button.setDebounceDelay(100);
 }
 
-void tButtonCallback() {
+void tUserInputCallback() {
     static int buttonState = 0;
     static int prevButtonState = 0;
     static long pressTimeStart = millis();

@@ -10,7 +10,7 @@
 
 Task tMeasure(100, TASK_FOREVER, &tMeasureCallback);
 Task tDisplay(250, TASK_FOREVER, &tDisplayCallback);
-Task tButton(100, TASK_FOREVER, &tButtonCallback);
+Task tUserInput(25, TASK_FOREVER, &tUserInputCallback);
 
 #if ENABLE_IOT
 Task tIoT(5000, TASK_FOREVER, &tIoTCallback);
@@ -31,10 +31,10 @@ void setup()
   taskManager.init();
   taskManager.addTask(tMeasure);
   taskManager.addTask(tDisplay);
-  taskManager.addTask(tButton);
+  taskManager.addTask(tUserInput);
   tMeasure.enable();
   tDisplay.enable();
-  tButton.enable();
+  tUserInput.enable();
 
 #if ENABLE_IOT
   initializeIoT();
