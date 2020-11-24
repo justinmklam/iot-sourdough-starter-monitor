@@ -34,7 +34,10 @@ void tDisplayCallback() {
 
   switch (getState()) {
     case STATE_CALIBRATION:
-      display.println("Calibrating");
+      display.println("Calibration");
+      display.print("Jar height: ");
+      display.print(measurements.range);
+      display.print(" mm");
       break;
 
     default:

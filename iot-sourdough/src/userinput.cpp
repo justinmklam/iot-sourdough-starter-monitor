@@ -19,6 +19,7 @@ void tUserInputCallback() {
     static int prevButtonState = 0;
     static long pressTimeStart = millis();
     static long pressDuration;
+    static bool stateChangeInProgress = false;
 
     buttonState = button.isPressed();
 
@@ -33,6 +34,13 @@ void tUserInputCallback() {
             pressDuration = millis() - pressTimeStart;
             Serial.print(pressDuration);
             Serial.println(" ms pressed");
+
+            if (!stateChangeInProgress && userState == STATE_CALIBRATION) {
+                // Short button press exits calibration mode
+                userState = STATE_DEFAULT;
+            }
+
+            stateChangeInProgress = false;
         }
     }
     else if (buttonState == HIGH) {
@@ -45,6 +53,7 @@ void tUserInputCallback() {
             if (userState != STATE_CALIBRATION) {
                 Serial.println("Entering calibration");
                 userState = STATE_CALIBRATION;
+                stateChangeInProgress = true;
             }
         }
     }

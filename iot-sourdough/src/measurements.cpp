@@ -4,6 +4,7 @@
 #include <DHT_U.h>
 
 #include "measurements.h"
+#include "userinput.h"
 
 #define DHTPIN 10
 #define DHTTYPE DHT22
@@ -26,6 +27,8 @@ void initializeMeasurements() {
 }
 
 void tMeasureCallback() {
+  static int jarHeightMm = 0;
+
   measurements.range = vl.readRange();
   measurements.status = vl.readRangeStatus();
 
@@ -35,10 +38,18 @@ void tMeasureCallback() {
   dht.humidity().getEvent(&event);
   measurements.humidity = event.relative_humidity;
 
+  measurements.rise_percent = measurements.range - jarHeightMm;
+
   Serial.print(measurements.range);
   Serial.print("mm, ");
   Serial.print(measurements.temperature);
   Serial.print("C, ");
   Serial.print(measurements.humidity);
+  Serial.print("%, ");
+  Serial.print(measurements.rise_percent);
   Serial.print("%\n");
+
+  if (getState() == STATE_CALIBRATION) {
+    jarHeightMm = measurements.range;
+  }
 }
