@@ -27,11 +27,6 @@ void tDisplayCallback() {
   display.clearDisplay();
   display.setCursor(0,0);
 
-  // Dummy code to force state change for now
-  if (measurements.range > 100) {
-    setState(2);
-  }
-
   switch (getState()) {
     case STATE_CALIBRATION:
       display.println("Calibration");
