@@ -3,6 +3,7 @@
 
 #include "display.h"
 #include "measurements.h"
+#include "userinput.h"
 
 Adafruit_SSD1306 display = Adafruit_SSD1306();
 
@@ -26,20 +27,28 @@ void tDisplayCallback() {
   display.clearDisplay();
   display.setCursor(0,0);
 
-  if (measurements.status == 0) {
-    // Serial.print("Range: "); Serial.println(range);
-    display.print(measurements.range);
-    display.print("mm\n");
-  } else {
-    display.print("n/a\n");
-    // Serial.print("Error reading VL6180X, code: ");
-    // Serial.println(status);
-    // return;
-  }
+  switch (getState()) {
+    case STATE_CALIBRATION:
+      display.println("Calibration");
+      display.print("Jar height: ");
+      display.print(measurements.range);
+      display.print(" mm");
+      break;
 
-  display.print(measurements.temperature);
-  display.print("C\n");
-  display.print(measurements.humidity);
-  display.print("%");
+    default:
+      if (measurements.status == 0) {
+        display.print(measurements.rise_percent);
+        display.print("%\n");
+      } else {
+        display.print("n/a\n");
+      }
+
+      display.print(measurements.temperature);
+      display.print("C\n");
+      display.print(measurements.humidity);
+      display.print("%\n");
+      break;
+  }
+  display.println(getState());
   display.display();
 }

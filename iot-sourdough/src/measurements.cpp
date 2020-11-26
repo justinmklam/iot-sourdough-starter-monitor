@@ -4,6 +4,7 @@
 #include <DHT_U.h>
 
 #include "measurements.h"
+#include "userinput.h"
 
 #define DHTPIN 10
 #define DHTTYPE DHT22
@@ -26,6 +27,9 @@ void initializeMeasurements() {
 }
 
 void tMeasureCallback() {
+  static int jarHeightMm = 0;
+  static int levainHeightMm = 0;
+
   measurements.range = vl.readRange();
   measurements.status = vl.readRangeStatus();
 
@@ -35,10 +39,39 @@ void tMeasureCallback() {
   dht.humidity().getEvent(&event);
   measurements.humidity = event.relative_humidity;
 
+  if (levainHeightMm != 0) {
+    measurements.rise_height = jarHeightMm - measurements.range - levainHeightMm;
+    measurements.rise_percent = measurements.rise_height / levainHeightMm * 100.0;
+  }
+  else {
+    measurements.rise_height = 0;
+    measurements.rise_percent = 0;
+  }
+
   Serial.print(measurements.range);
+  Serial.print("mm, ");
+  Serial.print(levainHeightMm);
+  Serial.print("mm, ");
+  Serial.print(measurements.rise_height);
   Serial.print("mm, ");
   Serial.print(measurements.temperature);
   Serial.print("C, ");
   Serial.print(measurements.humidity);
+  Serial.print("%, ");
+  Serial.print(measurements.rise_percent);
   Serial.print("%\n");
+
+  switch (getState()) {
+    case STATE_CALIBRATION:
+      jarHeightMm = measurements.range;
+      break;
+    case STATE_MONITOR:
+      if (levainHeightMm == 0) {
+        levainHeightMm = jarHeightMm - measurements.range;
+      }
+      break;
+    case STATE_DEFAULT:
+      levainHeightMm = 0;
+      break;
+  }
 }
