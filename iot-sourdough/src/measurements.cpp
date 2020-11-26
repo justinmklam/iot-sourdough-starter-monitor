@@ -26,13 +26,6 @@ void initializeMeasurements() {
   dht.temperature().getSensor(&dht_sensor);
 }
 
-float calculate_rise_percent(int levainHeight, int jarHeight, int currentHeight) {
-  float x = levainHeight - currentHeight;
-  float y = jarHeight - levainHeight;
-
-  return x / y * 100.0;
-}
-
 void tMeasureCallback() {
   static int jarHeightMm = 0;
   static int levainHeightMm = 0;
@@ -47,13 +40,19 @@ void tMeasureCallback() {
   measurements.humidity = event.relative_humidity;
 
   if (levainHeightMm != 0) {
-    measurements.rise_percent = calculate_rise_percent(levainHeightMm, jarHeightMm, measurements.range);
+    measurements.rise_height = jarHeightMm - measurements.range - levainHeightMm;
+    measurements.rise_percent = measurements.rise_height / levainHeightMm * 100.0;
   }
   else {
+    measurements.rise_height = 0;
     measurements.rise_percent = 0;
   }
 
   Serial.print(measurements.range);
+  Serial.print("mm, ");
+  Serial.print(levainHeightMm);
+  Serial.print("mm, ");
+  Serial.print(measurements.rise_height);
   Serial.print("mm, ");
   Serial.print(measurements.temperature);
   Serial.print("C, ");
@@ -68,7 +67,7 @@ void tMeasureCallback() {
       break;
     case STATE_MONITOR:
       if (levainHeightMm == 0) {
-        levainHeightMm = measurements.range;
+        levainHeightMm = jarHeightMm - measurements.range;
       }
       break;
     case STATE_DEFAULT:
