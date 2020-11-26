@@ -37,8 +37,8 @@ void tDisplayCallback() {
 
     default:
       if (measurements.status == 0) {
-        display.print(measurements.range);
-        display.print("mm\n");
+        display.print(measurements.rise_percent);
+        display.print("%\n");
       } else {
         display.print("n/a\n");
       }
