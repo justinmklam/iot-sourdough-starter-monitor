@@ -10,7 +10,7 @@
 
 Task tMeasure(100, TASK_FOREVER, &tMeasureCallback);
 Task tDisplay(250, TASK_FOREVER, &tDisplayCallback);
-Task tUserInput(25, TASK_FOREVER, &tUserInputCallback);
+Task tUserInput(10, TASK_FOREVER, &tUserInputCallback);
 
 #if ENABLE_IOT
 Task tIoT(5000, TASK_FOREVER, &tIoTCallback);
