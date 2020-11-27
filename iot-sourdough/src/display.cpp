@@ -77,6 +77,5 @@ void tDisplayCallback() {
       }
       break;
   }
-  display.println(getDisplayState());
   display.display();
 }
