@@ -36,19 +36,32 @@ void tDisplayCallback() {
       break;
 
     default:
-      if (measurements.status == 0) {
-        display.print(measurements.rise_percent);
-        display.print("%\n");
-      } else {
-        display.print("n/a\n");
-      }
+      // Show the different "dashboards"
+      switch (getDisplayState()) {
+        case DISPLAY_STATE_DEFAULT:
+          if (measurements.status == 0) {
+            display.print(measurements.rise_percent);
+            display.print("%\n");
+          } else {
+            display.print("n/a\n");
+          }
 
-      display.print(measurements.temperature);
-      display.print("C\n");
-      display.print(measurements.humidity);
-      display.print("%\n");
+          display.print(measurements.temperature);
+          display.print("C\n");
+          display.print(measurements.humidity);
+          display.print("%\n");
+          break;
+
+        case DISPLAY_STATE_GRAPH:
+          display.println("graph");
+          break;
+
+        case DISPLAY_STATE_ADVANCED:
+          display.println("advanced");
+          break;
+      }
       break;
   }
-  display.println(getState());
+  display.println(getDisplayState());
   display.display();
 }
