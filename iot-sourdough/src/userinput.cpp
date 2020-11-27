@@ -10,14 +10,10 @@ int userState = STATE_DEFAULT;
 // False since active high
 OneButton button(BUTTON_PIN, false);
 
-void onClick() {
-    Serial.println("Pressed");
+void onLongPress() {
+    Serial.println("Long press");
 
     switch (userState) {
-        case STATE_CALIBRATION:
-            // Short button press exits calibration mode
-            userState = STATE_DEFAULT;
-            break;
         case STATE_DEFAULT:
             // Start monitoring
             userState = STATE_MONITOR;
@@ -29,16 +25,23 @@ void onClick() {
     }
 }
 
-void onLongPress() {
-    Serial.println("Long press");
+void onDoubleClick() {
+    Serial.println("Double click");
     if (userState != STATE_CALIBRATION) {
         Serial.println("Entering calibration");
         userState = STATE_CALIBRATION;
     }
 }
 
-void onDoubleClick() {
-    Serial.println("Double press");
+void onClick() {
+    Serial.println("Click");
+
+    switch (userState) {
+        case STATE_CALIBRATION:
+            // Short button press exits calibration mode
+            userState = STATE_DEFAULT;
+            break;
+    }
 }
 
 void initializeButton() {
