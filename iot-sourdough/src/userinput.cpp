@@ -1,7 +1,7 @@
 #include <Arduino.h>
 
 #include <pushbutton.h>
-#include <EasyButton.h>
+#include <OneButton.h>
 #include "userinput.h"
 
 #define BUTTON_PIN 9
@@ -9,26 +9,44 @@
 
 int userState = STATE_DEFAULT;
 
-EasyButton button(BUTTON_PIN, 35, true, false);
+OneButton button(BUTTON_PIN, false);
 
-void onPressed() {
+void onClick() {
     Serial.println("Pressed");
+
+    switch (userState) {
+        case STATE_CALIBRATION:
+            // Short button press exits calibration mode
+            userState = STATE_DEFAULT;
+            break;
+        case STATE_DEFAULT:
+            // Start monitoring
+            userState = STATE_MONITOR;
+            break;
+        case STATE_MONITOR:
+            // Stop monitoring
+            userState = STATE_DEFAULT;
+            break;
+    }
 }
 
-void onLongPressed() {
+void onLongPress() {
     Serial.println("Long press");
+    if (userState != STATE_CALIBRATION) {
+        Serial.println("Entering calibration");
+        userState = STATE_CALIBRATION;
+    }
 }
 
-void onDoublePressed() {
+void onDoubleClick() {
     Serial.println("Double press");
 }
 
 void initializeButton() {
     // button.setDebounceDelay(100);
-    button.begin();
-    button.onPressed(onPressed);
-    button.onPressedFor(LONG_PRESS_THRESHOLD_MS, onLongPressed);
-    button.onSequence(2, 500, onDoublePressed);
+    button.attachClick(onClick);
+    button.attachDoubleClick(onDoubleClick);
+    button.attachLongPressStart(onLongPress);
 }
 
 void tUserInputCallback() {
@@ -87,7 +105,7 @@ void tUserInputCallback() {
     //     }
     // }
     // prevButtonState = buttonState;
-    button.read();
+    button.tick();
 }
 
 int getState() {
