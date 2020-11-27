@@ -27,9 +27,12 @@ void onLongPress() {
 
 void onDoubleClick() {
     Serial.println("Double click");
-    if (userState != STATE_CALIBRATION) {
-        Serial.println("Entering calibration");
-        userState = STATE_CALIBRATION;
+
+    switch (userState) {
+        case STATE_DEFAULT:
+            Serial.println("Entering calibration");
+            userState = STATE_CALIBRATION;
+            break;
     }
 }
 
