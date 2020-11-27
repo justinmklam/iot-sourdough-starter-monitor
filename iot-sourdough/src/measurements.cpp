@@ -41,7 +41,7 @@ void tMeasureCallback() {
 
   if (levainHeightMm != 0) {
     measurements.rise_height = jarHeightMm - measurements.range - levainHeightMm;
-    measurements.rise_percent = measurements.rise_height / levainHeightMm * 100.0;
+    measurements.rise_percent = 100.0 * (float) measurements.rise_height / (float) levainHeightMm;
   }
   else {
     measurements.rise_height = 0;

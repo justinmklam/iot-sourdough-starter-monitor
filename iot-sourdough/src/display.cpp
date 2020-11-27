@@ -57,7 +57,22 @@ void tDisplayCallback() {
           break;
 
         case DISPLAY_STATE_ADVANCED:
-          display.println("advanced");
+          char adv_row1[128];
+          char adv_row2[128];
+          char adv_row3[128];
+
+          snprintf(adv_row1, sizeof(adv_row1),
+            "R: %5.1f %%  T: %.1f C", measurements.rise_percent, measurements.temperature
+          );
+          snprintf(adv_row2, sizeof(adv_row2),
+            "R: %4d mm  H: %.1f %%", measurements.rise_height, measurements.humidity
+          );
+          snprintf(adv_row3, sizeof(adv_row3),
+            "D: %4d mm", measurements.range
+          );
+          display.println(adv_row1);
+          display.println(adv_row2);
+          display.println(adv_row3);
           break;
       }
       break;
