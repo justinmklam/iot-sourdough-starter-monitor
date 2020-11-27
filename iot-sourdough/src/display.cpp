@@ -29,6 +29,7 @@ void tDisplayCallback() {
 
   switch (getState()) {
     case STATE_CALIBRATION:
+      display.setTextSize(1);
       display.println("Calibration");
       display.print("Jar height: ");
       display.print(measurements.range);
@@ -39,17 +40,9 @@ void tDisplayCallback() {
       // Show the different "dashboards"
       switch (getDisplayState()) {
         case DISPLAY_STATE_DEFAULT:
-          if (measurements.status == 0) {
-            display.print(measurements.rise_percent);
-            display.print("%\n");
-          } else {
-            display.print("n/a\n");
-          }
-
-          display.print(measurements.temperature);
-          display.print("C\n");
-          display.print(measurements.humidity);
-          display.print("%\n");
+          display.setTextSize(3);
+          display.print(measurements.rise_percent);
+          display.print("%");
           break;
 
         case DISPLAY_STATE_GRAPH:
@@ -57,6 +50,7 @@ void tDisplayCallback() {
           break;
 
         case DISPLAY_STATE_ADVANCED:
+          display.setTextSize(1);
           char adv_row1[128];
           char adv_row2[128];
           char adv_row3[128];
