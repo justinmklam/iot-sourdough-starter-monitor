@@ -99,10 +99,14 @@ void tDisplayCallback() {
           display.clearDisplay();
           display.setCursor(0,0);
           display.setTextSize(1);
+          char adv_row0[128];
           char adv_row1[128];
           char adv_row2[128];
           char adv_row3[128];
 
+          snprintf(adv_row0, sizeof(adv_row0),
+            "M: %5.1f %%, %.1f min", measurements.maxRisePercent, measurements.timeSinceMaxRiseMins
+          );
           snprintf(adv_row1, sizeof(adv_row1),
             "R: %5.1f %%  T: %.1f C", measurements.rise_percent, measurements.temperature
           );
@@ -112,6 +116,7 @@ void tDisplayCallback() {
           snprintf(adv_row3, sizeof(adv_row3),
             "D: %4d mm", measurements.range
           );
+          display.println(adv_row0);
           display.println(adv_row1);
           display.println(adv_row2);
           display.println(adv_row3);
