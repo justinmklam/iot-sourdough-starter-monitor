@@ -54,8 +54,11 @@ void tDisplayCallback() {
           display.clearDisplay();
           display.setCursor(0,0);
           display.setTextSize(3);
-          display.print(measurements.rise_percent);
-          display.print("%");
+          display.print(measurements.maxRisePercent);
+          display.println("%");
+          display.setTextSize(1);
+          display.print(measurements.timeSinceMaxRiseMins);
+          display.print(" mins ago");
           break;
 
         case DISPLAY_STATE_GRAPH:
