@@ -68,8 +68,10 @@ void tMeasureCallback() {
       jarHeightMm = measurements.range;
       break;
     case STATE_MONITOR:
+      // Start of new monitoring session
       if (levainHeightMm == 0) {
         levainHeightMm = jarHeightMm - measurements.range;
+        bufferRiseHeight.clear();
       }
 
       bufferRiseHeight.push(measurements.rise_percent);
