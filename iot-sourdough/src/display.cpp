@@ -9,6 +9,7 @@
 #define SSD1306_HEIGHT_PX 32
 
 Adafruit_SSD1306 display = Adafruit_SSD1306(SSD1306_WIDTH_PX, SSD1306_HEIGHT_PX);
+extern CircularBuffer<float, SSD1306_WIDTH_PX> bufferRiseHeight;
 
 extern Measurements measurements;
 
@@ -58,23 +59,19 @@ void tDisplayCallback() {
           static int x1 = 0;
           static int y1 = y0;
 
-          if (prevDisplayState != getDisplayState()) {
-            display.clearDisplay();
-            // Reset coordinates for now until we figure out array plotting
-            x0 = 0;
-            x1 = 0;
+          display.clearDisplay();
+
+          x0 = 0;
+          y0 = bufferRiseHeight[0];
+
+          for (int i=1; i < bufferRiseHeight.size(); i++) {
+            y1 = SSD1306_HEIGHT_PX - bufferRiseHeight[i];
+            display.writeLine(x0, y0, i, y1, WHITE);
+
+            x0 = i;
+            y0 = y1;
           }
 
-          x1 = x0 + 1;
-          y1 = SSD1306_HEIGHT_PX - measurements.rise_height;
-
-          display.writeLine(x0, y0, x1, y1, WHITE);
-          Serial.print(x0);
-          Serial.print(",");
-          Serial.println(y0);
-
-          x0 = x1;
-          y0 = y1;
           break;
 
         case DISPLAY_STATE_ADVANCED:
