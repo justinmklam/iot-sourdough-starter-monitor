@@ -27,6 +27,11 @@ void initializeDisplay() {
   display.display();
 }
 
+float calculateHeightToPlot(float height, float maxHeight) {
+  // Need to invert since display/plotting origin is top left
+  return SSD1306_HEIGHT_PX - height/maxHeight * SSD1306_HEIGHT_PX;
+}
+
 void tDisplayCallback() {
   static int prevDisplayState = DISPLAY_STATE_DEFAULT;
 
@@ -58,14 +63,30 @@ void tDisplayCallback() {
           static int y0 = SSD1306_HEIGHT_PX;;
           static int x1 = 0;
           static int y1 = y0;
+          static float maxRiseHeight;
 
           display.clearDisplay();
 
+          // Reset ymax in the plot
+          if (measurements.rise_percent == 0) {
+            maxRiseHeight = 50;
+          }
+
+          // Get max so plot autoscales in vertical axis
+          for (int i=0; i< bufferRiseHeight.size(); i++) {
+            if (bufferRiseHeight[i] > maxRiseHeight) {
+              maxRiseHeight = bufferRiseHeight[i];
+            }
+          }
+
+          Serial.print("Max height: ");
+          Serial.println(maxRiseHeight);
+
           x0 = 0;
-          y0 = bufferRiseHeight[0];
+          y0 = calculateHeightToPlot(bufferRiseHeight[0], maxRiseHeight);
 
           for (int i=1; i < bufferRiseHeight.size(); i++) {
-            y1 = SSD1306_HEIGHT_PX - bufferRiseHeight[i];
+            y1 = calculateHeightToPlot(bufferRiseHeight[i], maxRiseHeight);
             display.writeLine(x0, y0, i, y1, WHITE);
 
             x0 = i;

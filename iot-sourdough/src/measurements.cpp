@@ -72,7 +72,7 @@ void tMeasureCallback() {
         levainHeightMm = jarHeightMm - measurements.range;
       }
 
-      bufferRiseHeight.push(measurements.rise_height);
+      bufferRiseHeight.push(measurements.rise_percent);
 
       break;
     case STATE_DEFAULT:
