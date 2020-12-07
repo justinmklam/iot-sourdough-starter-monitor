@@ -9,6 +9,8 @@
 #define DHTPIN 10
 #define DHTTYPE DHT22
 
+CircularBuffer<float, 128> bufferRiseHeight;
+
 Measurements measurements;
 
 Adafruit_VL6180X vl = Adafruit_VL6180X();
@@ -48,18 +50,18 @@ void tMeasureCallback() {
     measurements.rise_percent = 0;
   }
 
-  Serial.print(measurements.range);
-  Serial.print("mm, ");
-  Serial.print(levainHeightMm);
-  Serial.print("mm, ");
-  Serial.print(measurements.rise_height);
-  Serial.print("mm, ");
-  Serial.print(measurements.temperature);
-  Serial.print("C, ");
-  Serial.print(measurements.humidity);
-  Serial.print("%, ");
-  Serial.print(measurements.rise_percent);
-  Serial.print("%\n");
+  // Serial.print(measurements.range);
+  // Serial.print("mm, ");
+  // Serial.print(levainHeightMm);
+  // Serial.print("mm, ");
+  // Serial.print(measurements.rise_height);
+  // Serial.print("mm, ");
+  // Serial.print(measurements.temperature);
+  // Serial.print("C, ");
+  // Serial.print(measurements.humidity);
+  // Serial.print("%, ");
+  // Serial.print(measurements.rise_percent);
+  // Serial.print("%\n");
 
   switch (getState()) {
     case STATE_CALIBRATION:
@@ -69,9 +71,16 @@ void tMeasureCallback() {
       if (levainHeightMm == 0) {
         levainHeightMm = jarHeightMm - measurements.range;
       }
+
+      bufferRiseHeight.push(measurements.rise_height);
+
       break;
     case STATE_DEFAULT:
       levainHeightMm = 0;
       break;
   }
 }
+
+// CircularBuffer<float, 400> getRiseHeightBuffer() {
+//   return bufferRiseHeight;
+// }

@@ -1,7 +1,10 @@
 #pragma once
 
+#include <CircularBuffer.h>
+
 void initializeMeasurements();
 void tMeasureCallback();
+// CircularBuffer<float, 400> getRiseHeightBuffer();
 
 typedef struct Measurements {
   uint8_t range = 0;
