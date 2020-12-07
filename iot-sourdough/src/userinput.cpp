@@ -6,6 +6,7 @@
 #define BUTTON_PIN 9
 
 int userState = STATE_DEFAULT;
+int displayState = DISPLAY_STATE_DEFAULT;
 
 // False since active high
 OneButton button(BUTTON_PIN, false);
@@ -44,6 +45,13 @@ void onClick() {
             // Short button press exits calibration mode
             userState = STATE_DEFAULT;
             break;
+        default:
+            // Cycle through display states
+            displayState++;
+            if (displayState == NUM_DISPLAY_STATES) {
+                displayState = 0;
+            }
+            break;
     }
 }
 
@@ -63,4 +71,8 @@ int getState() {
 
 void setState(int state) {
     userState = state;
+}
+
+int getDisplayState() {
+    return displayState;
 }
