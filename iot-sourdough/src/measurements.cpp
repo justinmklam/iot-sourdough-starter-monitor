@@ -68,30 +68,28 @@ void tMeasureCallback() {
       jarHeightMm = measurements.range;
       break;
     case STATE_MONITOR:
-      static float maxRiseHeight = 0;
       static long timeOfMaxHeightMs = millis();
-      static float timeSinceMaxHeightMin = 0;
 
       // Start of new monitoring session
       if (levainHeightMm == 0) {
         levainHeightMm = jarHeightMm - measurements.range;
         bufferRiseHeight.clear();
-        maxRiseHeight = 0;
         timeOfMaxHeightMs = millis();
-        timeSinceMaxHeightMin = 0;
+        measurements.maxRisePercent = 0;
+        measurements.timeSinceMaxRiseMins = 0;
       }
 
       bufferRiseHeight.push(measurements.rise_percent);
 
       for (int i=0; i < bufferRiseHeight.size(); i++) {
-        if (bufferRiseHeight[i] > maxRiseHeight) {
-          maxRiseHeight = bufferRiseHeight[i];
+        if (bufferRiseHeight[i] > measurements.maxRisePercent) {
+          measurements.maxRisePercent = bufferRiseHeight[i];
           timeOfMaxHeightMs = millis();
         }
       }
 
-      timeSinceMaxHeightMin = (millis() - timeOfMaxHeightMs) / 60000.0;
-      Serial.println(timeSinceMaxHeightMin);
+      measurements.timeSinceMaxRiseMins = (millis() - timeOfMaxHeightMs) / 60000.0;
+      Serial.println(measurements.timeSinceMaxRiseMins);
 
       break;
     case STATE_DEFAULT:

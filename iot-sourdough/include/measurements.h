@@ -13,4 +13,6 @@ typedef struct Measurements {
   float humidity = 0;
   int rise_height = 0;
   float rise_percent = 0;
+  float maxRisePercent = 0;
+  float timeSinceMaxRiseMins = 0;
 } Measurements;
