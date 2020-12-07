@@ -66,7 +66,7 @@ void tDisplayCallback() {
           }
 
           x1 = x0 + 1;
-          y1 = measurements.rise_height;
+          y1 = SSD1306_HEIGHT_PX - measurements.rise_height;
 
           display.writeLine(x0, y0, x1, y1, WHITE);
           Serial.print(x0);
