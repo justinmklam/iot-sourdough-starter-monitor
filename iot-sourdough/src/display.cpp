@@ -96,6 +96,15 @@ void tDisplayCallback() {
             y0 = y1;
           }
 
+          // Show current rise percent at bottom right of display
+          display.setCursor(SSD1306_WIDTH_PX - 30, SSD1306_HEIGHT_PX - 7);
+          display.setTextSize(1);
+          char rise_percent_text[10];
+          snprintf(rise_percent_text, sizeof(rise_percent_text),
+            "%4.0f%%", measurements.rise_percent
+          );
+          display.println(rise_percent_text);
+
           break;
 
         case DISPLAY_STATE_ADVANCED:
