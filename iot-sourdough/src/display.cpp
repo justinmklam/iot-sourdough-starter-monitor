@@ -97,13 +97,13 @@ void tDisplayCallback() {
           }
 
           // Show current rise percent at bottom right of display
-          display.setCursor(SSD1306_WIDTH_PX - 30, SSD1306_HEIGHT_PX - 7);
+          display.setCursor(SSD1306_WIDTH_PX - 50, SSD1306_HEIGHT_PX - 7);
           display.setTextSize(1);
-          char rise_percent_text[10];
-          snprintf(rise_percent_text, sizeof(rise_percent_text),
-            "%4.0f%%", measurements.rise_percent
+          char graph_text[10];
+          snprintf(graph_text, sizeof(graph_text),
+            "%4.0f min", measurements.timeSinceMaxRiseMins
           );
-          display.println(rise_percent_text);
+          display.println(graph_text);
 
           break;
 
