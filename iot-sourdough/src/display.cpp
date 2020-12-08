@@ -82,9 +82,6 @@ void tDisplayCallback() {
             }
           }
 
-          Serial.print("Max height: ");
-          Serial.println(maxRiseHeight);
-
           x0 = 0;
           y0 = calculateHeightToPlot(bufferRiseHeight[0], maxRiseHeight);
 

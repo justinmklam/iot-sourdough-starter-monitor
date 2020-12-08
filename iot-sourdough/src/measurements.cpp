@@ -89,7 +89,6 @@ void tMeasureCallback() {
       }
 
       measurements.timeSinceMaxRiseMins = (millis() - timeOfMaxHeightMs) / 60000.0;
-      Serial.println(measurements.timeSinceMaxRiseMins);
 
       break;
     case STATE_DEFAULT:
