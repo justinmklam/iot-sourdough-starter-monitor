@@ -9,6 +9,8 @@
 #define DHTPIN 10
 #define DHTTYPE DHT22
 
+CircularBuffer<float, 128> bufferRiseHeight;
+
 Measurements measurements;
 
 Adafruit_VL6180X vl = Adafruit_VL6180X();
@@ -48,30 +50,53 @@ void tMeasureCallback() {
     measurements.rise_percent = 0;
   }
 
-  Serial.print(measurements.range);
-  Serial.print("mm, ");
-  Serial.print(levainHeightMm);
-  Serial.print("mm, ");
-  Serial.print(measurements.rise_height);
-  Serial.print("mm, ");
-  Serial.print(measurements.temperature);
-  Serial.print("C, ");
-  Serial.print(measurements.humidity);
-  Serial.print("%, ");
-  Serial.print(measurements.rise_percent);
-  Serial.print("%\n");
+  // Serial.print(measurements.range);
+  // Serial.print("mm, ");
+  // Serial.print(levainHeightMm);
+  // Serial.print("mm, ");
+  // Serial.print(measurements.rise_height);
+  // Serial.print("mm, ");
+  // Serial.print(measurements.temperature);
+  // Serial.print("C, ");
+  // Serial.print(measurements.humidity);
+  // Serial.print("%, ");
+  // Serial.print(measurements.rise_percent);
+  // Serial.print("%\n");
 
   switch (getState()) {
     case STATE_CALIBRATION:
       jarHeightMm = measurements.range;
       break;
     case STATE_MONITOR:
+      static long timeOfMaxHeightMs = millis();
+
+      // Start of new monitoring session
       if (levainHeightMm == 0) {
         levainHeightMm = jarHeightMm - measurements.range;
+        bufferRiseHeight.clear();
+        timeOfMaxHeightMs = millis();
+        measurements.maxRisePercent = 0;
+        measurements.timeSinceMaxRiseMins = 0;
       }
+
+      bufferRiseHeight.push(measurements.rise_percent);
+
+      for (int i=0; i < bufferRiseHeight.size(); i++) {
+        if (bufferRiseHeight[i] > measurements.maxRisePercent) {
+          measurements.maxRisePercent = bufferRiseHeight[i];
+          timeOfMaxHeightMs = millis();
+        }
+      }
+
+      measurements.timeSinceMaxRiseMins = (millis() - timeOfMaxHeightMs) / 60000.0;
+
       break;
     case STATE_DEFAULT:
       levainHeightMm = 0;
       break;
   }
 }
+
+// CircularBuffer<float, 400> getRiseHeightBuffer() {
+//   return bufferRiseHeight;
+// }
