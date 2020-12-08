@@ -8,6 +8,8 @@
 #define SSD1306_WIDTH_PX 128
 #define SSD1306_HEIGHT_PX 32
 
+int displayState = DISPLAY_STATE_DEFAULT;
+
 Adafruit_SSD1306 display = Adafruit_SSD1306(SSD1306_WIDTH_PX, SSD1306_HEIGHT_PX);
 extern CircularBuffer<float, SSD1306_WIDTH_PX> bufferRiseHeight;
 
@@ -27,14 +29,20 @@ void initializeDisplay() {
   display.display();
 }
 
+void setNextDisplayState() {
+  displayState++;
+
+  if (displayState == NUM_DISPLAY_STATES) {
+    displayState = 0;
+  }
+}
+
 float calculateHeightToPlot(float height, float maxHeight) {
   // Need to invert since display/plotting origin is top left
   return SSD1306_HEIGHT_PX - height/maxHeight * SSD1306_HEIGHT_PX;
 }
 
 void tDisplayCallback() {
-  static int prevDisplayState = DISPLAY_STATE_DEFAULT;
-
   switch (getState()) {
     case STATE_CALIBRATION:
       display.clearDisplay();
@@ -49,7 +57,7 @@ void tDisplayCallback() {
 
     default:
       // Show the different "dashboards"
-      switch (getDisplayState()) {
+      switch (displayState) {
         case DISPLAY_STATE_DEFAULT:
           display.clearDisplay();
           display.setCursor(0,0);
@@ -134,6 +142,4 @@ void tDisplayCallback() {
       break;
   }
   display.display();
-
-  prevDisplayState = getDisplayState();
 }
