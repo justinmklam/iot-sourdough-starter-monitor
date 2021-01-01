@@ -10,6 +10,7 @@
 #define DHTTYPE DHT22
 
 CircularBuffer<float, 128> bufferRiseHeight;
+CircularBuffer<float, 128> bufferTemperature;
 
 Measurements measurements;
 
@@ -74,12 +75,14 @@ void tMeasureCallback() {
       if (levainHeightMm == 0) {
         levainHeightMm = jarHeightMm - measurements.range;
         bufferRiseHeight.clear();
+        bufferTemperature.clear();
         timeOfMaxHeightMs = millis();
         measurements.maxRisePercent = 0;
         measurements.timeSinceMaxRiseMins = 0;
       }
 
       bufferRiseHeight.push(measurements.rise_percent);
+      bufferTemperature.push(measurements.temperature);
 
       for (int i=0; i < bufferRiseHeight.size(); i++) {
         if (bufferRiseHeight[i] > measurements.maxRisePercent) {
