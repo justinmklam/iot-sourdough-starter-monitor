@@ -12,7 +12,7 @@ int displayState = DISPLAY_STATE_DEFAULT;
 
 Adafruit_SSD1306 display = Adafruit_SSD1306(SSD1306_WIDTH_PX, SSD1306_HEIGHT_PX);
 extern CircularBuffer<float, SSD1306_WIDTH_PX> bufferRiseHeight;
-
+extern CircularBuffer<float, SSD1306_WIDTH_PX> bufferTemperature;
 extern Measurements measurements;
 
 void initializeDisplay() {
@@ -40,6 +40,11 @@ void setNextDisplayState() {
 float calculateHeightToPlot(float height, float maxHeight) {
   // Need to invert since display/plotting origin is top left
   return SSD1306_HEIGHT_PX - height/maxHeight * SSD1306_HEIGHT_PX;
+}
+
+float calculateHeightToPlot(float height, float maxHeight, float minHeight) {
+  // Need to invert since display/plotting origin is top left
+  return SSD1306_HEIGHT_PX - (height - minHeight)/maxHeight * SSD1306_HEIGHT_PX;
 }
 
 void tDisplayCallback() {
@@ -109,6 +114,48 @@ void tDisplayCallback() {
             "%4.0f min", measurements.timeSinceMaxRiseMins
           );
           display.println(graph_text);
+
+          break;
+
+        case DISPLAY_STATE_GRAPH_TEMPERATURE:
+          static int temp_x0 = 0;
+          static int temp_y0 = SSD1306_HEIGHT_PX;;
+          static int temp_y1 = temp_y0;
+          static float maxTemperature;
+
+          display.clearDisplay();
+
+          // Reset ymax in the plot
+          if (measurements.rise_percent == 0) {
+            maxTemperature = 25;
+          }
+
+          // Get max so plot autoscales in vertical axis
+          for (int i=0; i< bufferTemperature.size(); i++) {
+            if (bufferTemperature[i] > maxTemperature) {
+              maxTemperature = bufferTemperature[i];
+            }
+          }
+
+          temp_x0 = 0;
+          temp_y0 = calculateHeightToPlot(bufferTemperature[0], maxTemperature);
+
+          for (int i=1; i < bufferTemperature.size(); i++) {
+            temp_y1 = calculateHeightToPlot(bufferTemperature[i], maxTemperature, 20);
+            display.writeLine(temp_x0, temp_y0, i, temp_y1, WHITE);
+
+            temp_x0 = i;
+            temp_y0 = temp_y1;
+          }
+
+          // Show current rise percent at bottom right of display
+          display.setCursor(SSD1306_WIDTH_PX - 40, SSD1306_HEIGHT_PX - 7);
+          display.setTextSize(1);
+          char graph_text_temp[10];
+          snprintf(graph_text_temp, sizeof(graph_text_temp),
+            "%4.1f C", measurements.temperature
+          );
+          display.println(graph_text_temp);
 
           break;
 
