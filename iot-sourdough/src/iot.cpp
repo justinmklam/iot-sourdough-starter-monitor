@@ -3,6 +3,7 @@
 #include <ESP8266WiFi.h>
 #include <ArduinoJson.h>
 
+#include "userinput.h"
 #include "measurements.h"
 #include "secrets.h"
 
@@ -70,16 +71,22 @@ void initializeIoT() {
 
 void tIoTCallback() {
     static unsigned long lastMillisPublish = 0;
-    StaticJsonDocument<200> publishMessage;
     static char shadowMessage[50];
 
-    publishMessage["time"] = getTimestampAscii();
-    publishMessage["temperature"] = measurements.temperature;
-    publishMessage["humidity"] = measurements.humidity;
-    publishMessage["distance"] = measurements.range;
+    // if (getState() == STATE_MONITOR) {
+      StaticJsonDocument<200> publishMessage;
 
-    awsClient.publishMessage(publishMessage);
+      publishMessage["deviceId"] = measurements.deviceId;
+      publishMessage["sessionId"] = measurements.sessionId;
+      publishMessage["temperature"] = measurements.temperature;
+      publishMessage["humidity"] = measurements.humidity;
+      publishMessage["riseHeight"] = measurements.rise_height;
+      publishMessage["risePercent"] = measurements.rise_percent;
 
-    // sprintf(shadowMessage, "{\"state\":{\"reported\": {\"range\": %ld}}}", range);
+      awsClient.publishMessage(publishMessage);
+    // }
+
+    // Need to keep the MQTT connection alive, so just update the shadow
+    // sprintf(shadowMessage, "{\"state\":{\"reported\": {\"riseHeight\": %ld}}}", measurements.rise_height);
     // awsClient.updateDeviceShadow(shadowMessage);
 }
