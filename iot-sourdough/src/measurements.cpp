@@ -6,6 +6,8 @@
 #include "measurements.h"
 #include "userinput.h"
 
+// 15 mins
+#define BUFFER_UPDATE_INTERVAL_MS 15*60*1000
 #define DHTPIN 10
 #define DHTTYPE DHT22
 
@@ -69,6 +71,7 @@ void tMeasureCallback() {
       break;
     case STATE_MONITOR:
       static long timeOfMaxHeightMs = millis();
+      static long prevBufferUpdateTimeMs = 0;
 
       // Start of new monitoring session
       if (levainHeightMm == 0) {
@@ -80,13 +83,17 @@ void tMeasureCallback() {
         measurements.timeSinceMaxRiseMins = 0;
       }
 
-      bufferRiseHeight.push(measurements.rise_percent);
+      // Only add to the buffer ever N seconds since the graph should capture the whole rise in one screen
+      if (millis() - prevBufferUpdateTimeMs > BUFFER_UPDATE_INTERVAL_MS) {
+        bufferRiseHeight.push(measurements.rise_percent);
 
-      for (int i=0; i < bufferRiseHeight.size(); i++) {
-        if (bufferRiseHeight[i] > measurements.maxRisePercent) {
-          measurements.maxRisePercent = bufferRiseHeight[i];
-          timeOfMaxHeightMs = millis();
+        for (int i=0; i < bufferRiseHeight.size(); i++) {
+          if (bufferRiseHeight[i] > measurements.maxRisePercent) {
+            measurements.maxRisePercent = bufferRiseHeight[i];
+            timeOfMaxHeightMs = millis();
+          }
         }
+        prevBufferUpdateTimeMs = millis();
       }
 
       measurements.timeSinceMaxRiseMins = (millis() - timeOfMaxHeightMs) / 60000.0;
