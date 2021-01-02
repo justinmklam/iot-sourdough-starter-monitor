@@ -13,6 +13,7 @@
 extern Measurements measurements;
 
 AwsIot awsClient;
+bool wifi_connected = false;
 
 bool waitUntilWifiConnected(String message)
 {
@@ -56,8 +57,6 @@ void messageReceivedCallback(char *topic, byte *payload, unsigned int length)
 }
 
 void initializeIoT() {
-  bool wifi_connected;
-
   pinMode(LED_PIN, OUTPUT);
   digitalWrite(LED_PIN, HIGH); // LED off
 
@@ -97,9 +96,15 @@ void initializeIoT() {
   // awsClient.setCallback(messageReceivedCallback);
 
   awsClient.connect();
+
+  digitalWrite(LED_PIN, HIGH);
 }
 
 void tIoTCallback() {
+    if (!wifi_connected) {
+      return;
+    }
+
     static char shadowMessage[50];
 
     digitalWrite(LED_PIN, LOW);
