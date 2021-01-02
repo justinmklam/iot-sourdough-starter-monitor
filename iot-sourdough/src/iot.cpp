@@ -7,21 +7,37 @@
 #include "measurements.h"
 #include "secrets.h"
 
+#define WIFI_CONNECTION_TIMEOUT_MS 30000
+
 extern Measurements measurements;
 
 AwsIot awsClient;
 
-void waitUntilWifiConnected(String message)
+bool waitUntilWifiConnected(String message)
 {
   Serial.print(message);
 
+  long start_time = millis();
+  bool is_wifi_connected = true;
+
   while (WiFi.status() != WL_CONNECTED)
   {
+    if (millis() - start_time > WIFI_CONNECTION_TIMEOUT_MS) {
+      is_wifi_connected = false;
+      break;
+    }
     Serial.print(".");
     delay(1000);
   }
 
-  Serial.println("ok!");
+  if (is_wifi_connected) {
+    Serial.println("ok!");
+  }
+  else {
+    Serial.println("timed out");
+  }
+
+  return is_wifi_connected;
 }
 
 void messageReceivedCallback(char *topic, byte *payload, unsigned int length)
@@ -39,10 +55,16 @@ void messageReceivedCallback(char *topic, byte *payload, unsigned int length)
 }
 
 void initializeIoT() {
+  bool wifi_connected;
   WiFi.hostname("levain-monitor");
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, pass);
-  waitUntilWifiConnected(String("Attempting to connect to SSID: ") + String(ssid));
+  wifi_connected = waitUntilWifiConnected(String("Attempting to connect to SSID: ") + String(ssid));
+
+  if (!wifi_connected) {
+    Serial.println("Wifi not connected. Starting in offline mode.");
+    return;
+  }
 
   // Pacific standard time = UTC -7
   configTimeWithNTP(-7, false);
