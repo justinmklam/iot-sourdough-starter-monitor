@@ -172,24 +172,25 @@ void AwsIot::updateDeviceShadow(const char *message)
 
 void AwsIot::pubSubErr(int8_t MQTTErr)
 {
+  Serial.print("MQTT Error: ");
   if (MQTTErr == MQTT_CONNECTION_TIMEOUT)
-    Serial.print("Connection tiemout");
+    Serial.println("Connection timeout");
   else if (MQTTErr == MQTT_CONNECTION_LOST)
-    Serial.print("Connection lost");
+    Serial.println("Connection lost");
   else if (MQTTErr == MQTT_CONNECT_FAILED)
-    Serial.print("Connect failed");
+    Serial.println("Connect failed");
   else if (MQTTErr == MQTT_DISCONNECTED)
-    Serial.print("Disconnected");
+    Serial.println("Disconnected");
   else if (MQTTErr == MQTT_CONNECTED)
-    Serial.print("Connected");
+    Serial.println("Reconnected");
   else if (MQTTErr == MQTT_CONNECT_BAD_PROTOCOL)
-    Serial.print("Connect bad protocol");
+    Serial.println("Connect bad protocol");
   else if (MQTTErr == MQTT_CONNECT_BAD_CLIENT_ID)
-    Serial.print("Connect bad Client-ID");
+    Serial.println("Connect bad Client-ID");
   else if (MQTTErr == MQTT_CONNECT_UNAVAILABLE)
-    Serial.print("Connect unavailable");
+    Serial.println("Connect unavailable");
   else if (MQTTErr == MQTT_CONNECT_BAD_CREDENTIALS)
-    Serial.print("Connect bad credentials");
+    Serial.println("Connect bad credentials");
   else if (MQTTErr == MQTT_CONNECT_UNAUTHORIZED)
-    Serial.print("Connect unauthorized");
+    Serial.println("Connect unauthorized");
 }

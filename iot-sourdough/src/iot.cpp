@@ -3,6 +3,7 @@
 #include <ESP8266WiFi.h>
 #include <ArduinoJson.h>
 
+#include "userinput.h"
 #include "measurements.h"
 #include "secrets.h"
 
@@ -61,7 +62,7 @@ void initializeIoT() {
 #endif
 
   // Optional
-  // awsClient.setShadowTopic("$aws/things/levain-monitor/shadow/update");
+  awsClient.setShadowTopic("$aws/things/levain-monitor/shadow/update");
   // awsClient.setSubscribeTopic("$aws/things/levain-monitor/shadow/update");
   // awsClient.setCallback(messageReceivedCallback);
 
@@ -69,17 +70,23 @@ void initializeIoT() {
 }
 
 void tIoTCallback() {
-    static unsigned long lastMillisPublish = 0;
-    StaticJsonDocument<200> publishMessage;
     static char shadowMessage[50];
 
-    publishMessage["time"] = getTimestampAscii();
-    publishMessage["temperature"] = measurements.temperature;
-    publishMessage["humidity"] = measurements.humidity;
-    publishMessage["distance"] = measurements.range;
+    if (getState() == STATE_MONITOR) {
+      StaticJsonDocument<200> publishMessage;
 
-    awsClient.publishMessage(publishMessage);
+      publishMessage["deviceId"] = measurements.deviceId;
+      publishMessage["sessionId"] = measurements.sessionId;
+      publishMessage["temperature"] = measurements.temperature;
+      publishMessage["humidity"] = measurements.humidity;
+      publishMessage["riseHeight"] = measurements.rise_height;
+      publishMessage["risePercent"] = measurements.rise_percent;
 
-    // sprintf(shadowMessage, "{\"state\":{\"reported\": {\"range\": %ld}}}", range);
-    // awsClient.updateDeviceShadow(shadowMessage);
+      awsClient.publishMessage(publishMessage);
+    }
+    else {
+      // Need to keep the MQTT connection alive, so just update the shadow
+      sprintf(shadowMessage, "{\"state\":{\"reported\": {\"time\": %ld}}}", millis());
+      awsClient.updateDeviceShadow(shadowMessage);
+    }
 }

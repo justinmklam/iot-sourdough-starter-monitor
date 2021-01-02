@@ -5,7 +5,7 @@
 #include "userinput.h"
 
 // If false, device will be standalone/offline
-#define ENABLE_IOT false
+#define ENABLE_IOT true
 
 Task tMeasure(100, TASK_FOREVER, &tMeasureCallback);
 Task tDisplay(250, TASK_FOREVER, &tDisplayCallback);
@@ -13,7 +13,7 @@ Task tUserInput(10, TASK_FOREVER, &tUserInputCallback);
 
 #if ENABLE_IOT
 #include "iot.h"
-Task tIoT(5000, TASK_FOREVER, &tIoTCallback);
+Task tIoT(10000, TASK_FOREVER, &tIoTCallback);
 #endif
 
 Scheduler taskManager;
