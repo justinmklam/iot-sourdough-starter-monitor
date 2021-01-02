@@ -7,6 +7,8 @@ void tMeasureCallback();
 // CircularBuffer<float, 400> getRiseHeightBuffer();
 
 typedef struct Measurements {
+  long sessionId = 0;
+  long deviceId = 0;
   uint8_t range = 0;
   uint8_t status = 0;
   float temperature = 0;

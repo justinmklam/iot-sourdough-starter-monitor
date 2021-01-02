@@ -72,6 +72,7 @@ void tMeasureCallback() {
 
       // Start of new monitoring session
       if (levainHeightMm == 0) {
+        measurements.sessionId = millis();
         levainHeightMm = jarHeightMm - measurements.range;
         bufferRiseHeight.clear();
         timeOfMaxHeightMs = millis();
