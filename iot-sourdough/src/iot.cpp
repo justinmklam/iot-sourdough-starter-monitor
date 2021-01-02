@@ -8,6 +8,7 @@
 #include "secrets.h"
 
 #define WIFI_CONNECTION_TIMEOUT_MS 30000
+#define LED_PIN D4
 
 extern Measurements measurements;
 
@@ -56,6 +57,10 @@ void messageReceivedCallback(char *topic, byte *payload, unsigned int length)
 
 void initializeIoT() {
   bool wifi_connected;
+
+  pinMode(LED_PIN, OUTPUT);
+  digitalWrite(LED_PIN, HIGH); // LED off
+
   WiFi.hostname("levain-monitor");
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, pass);
@@ -64,6 +69,9 @@ void initializeIoT() {
   if (!wifi_connected) {
     Serial.println("Wifi not connected. Starting in offline mode.");
     return;
+  }
+  else {
+    digitalWrite(LED_PIN, LOW); // LED on
   }
 
   // Pacific standard time = UTC -7
@@ -94,6 +102,8 @@ void initializeIoT() {
 void tIoTCallback() {
     static char shadowMessage[50];
 
+    digitalWrite(LED_PIN, LOW);
+
     if (getState() == STATE_MONITOR) {
       StaticJsonDocument<200> publishMessage;
 
@@ -111,4 +121,6 @@ void tIoTCallback() {
       sprintf(shadowMessage, "{\"state\":{\"reported\": {\"time\": %ld}}}", millis());
       awsClient.updateDeviceShadow(shadowMessage);
     }
+
+    digitalWrite(LED_PIN, HIGH);
 }
