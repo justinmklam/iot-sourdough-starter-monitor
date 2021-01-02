@@ -87,6 +87,6 @@ void tIoTCallback() {
     }
 
     // Need to keep the MQTT connection alive, so just update the shadow
-    sprintf(shadowMessage, "{\"state\":{\"reported\": {\"riseHeight\": %ld}}}", measurements.rise_height);
+    sprintf(shadowMessage, "{\"state\":{\"reported\": {\"time\": %ld}}}", millis());
     awsClient.updateDeviceShadow(shadowMessage);
 }
