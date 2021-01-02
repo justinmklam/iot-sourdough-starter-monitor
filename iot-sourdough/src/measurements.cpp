@@ -25,6 +25,7 @@ void initializeMeasurements() {
   }
   Serial.println("VL6180X sensor found!");
 
+  randomSeed(analogRead(A0));
   dht.begin();
   sensor_t dht_sensor;
   dht.temperature().getSensor(&dht_sensor);
@@ -75,7 +76,7 @@ void tMeasureCallback() {
 
       // Start of new monitoring session
       if (levainHeightMm == 0) {
-        measurements.sessionId = millis();
+        measurements.sessionId = random(2147483647);
         levainHeightMm = jarHeightMm - measurements.range;
         bufferRiseHeight.clear();
         timeOfMaxHeightMs = millis();
