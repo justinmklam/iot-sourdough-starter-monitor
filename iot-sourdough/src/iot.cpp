@@ -70,7 +70,6 @@ void initializeIoT() {
 }
 
 void tIoTCallback() {
-    static unsigned long lastMillisPublish = 0;
     static char shadowMessage[50];
 
     if (getState() == STATE_MONITOR) {
