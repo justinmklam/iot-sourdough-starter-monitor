@@ -62,7 +62,7 @@ void initializeIoT() {
 #endif
 
   // Optional
-  // awsClient.setShadowTopic("$aws/things/levain-monitor/shadow/update");
+  awsClient.setShadowTopic("$aws/things/levain-monitor/shadow/update");
   // awsClient.setSubscribeTopic("$aws/things/levain-monitor/shadow/update");
   // awsClient.setCallback(messageReceivedCallback);
 
@@ -73,7 +73,7 @@ void tIoTCallback() {
     static unsigned long lastMillisPublish = 0;
     static char shadowMessage[50];
 
-    // if (getState() == STATE_MONITOR) {
+    if (getState() == STATE_MONITOR) {
       StaticJsonDocument<200> publishMessage;
 
       publishMessage["deviceId"] = measurements.deviceId;
@@ -84,9 +84,9 @@ void tIoTCallback() {
       publishMessage["risePercent"] = measurements.rise_percent;
 
       awsClient.publishMessage(publishMessage);
-    // }
+    }
 
     // Need to keep the MQTT connection alive, so just update the shadow
-    // sprintf(shadowMessage, "{\"state\":{\"reported\": {\"riseHeight\": %ld}}}", measurements.rise_height);
-    // awsClient.updateDeviceShadow(shadowMessage);
+    sprintf(shadowMessage, "{\"state\":{\"reported\": {\"riseHeight\": %ld}}}", measurements.rise_height);
+    awsClient.updateDeviceShadow(shadowMessage);
 }
