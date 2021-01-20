@@ -72,7 +72,6 @@ void tDisplayCallback() {
         case DISPLAY_STATE_GRAPH:
           static int x0 = 0;
           static int y0 = SSD1306_HEIGHT_PX;;
-          static int x1 = 0;
           static int y1 = y0;
           static float maxRiseHeight;
 
