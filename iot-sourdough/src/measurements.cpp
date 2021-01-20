@@ -2,6 +2,7 @@
 #include <Adafruit_Sensor.h>
 #include <DHT.h>
 #include <DHT_U.h>
+#include <EEPROM.h>
 
 #include "measurements.h"
 #include "userinput.h"
@@ -10,6 +11,7 @@
 #define BUFFER_UPDATE_INTERVAL_MS 15*60*1000
 #define DHTPIN 10
 #define DHTTYPE DHT22
+#define EEPROM_ADDR_JAR_HEIGHT 0
 
 CircularBuffer<float, 128> bufferRiseHeight;
 
@@ -17,6 +19,7 @@ Measurements measurements;
 
 Adafruit_VL6180X vl = Adafruit_VL6180X();
 DHT_Unified dht(DHTPIN, DHTTYPE);
+int jarHeightMm = 0;
 
 void initializeMeasurements() {
   if (! vl.begin()) {
@@ -29,10 +32,15 @@ void initializeMeasurements() {
   dht.begin();
   sensor_t dht_sensor;
   dht.temperature().getSensor(&dht_sensor);
+
+  EEPROM.begin(512);
+  EEPROM.get(EEPROM_ADDR_JAR_HEIGHT, jarHeightMm);
+  Serial.print("Jar height: ");
+  Serial.println(jarHeightMm);
+  measurements.jarHeightMm = jarHeightMm;
 }
 
 void tMeasureCallback() {
-  static int jarHeightMm = 0;
   static int levainHeightMm = 0;
 
   measurements.range = vl.readRange();
@@ -69,6 +77,13 @@ void tMeasureCallback() {
   switch (getState()) {
     case STATE_CALIBRATION:
       jarHeightMm = measurements.range;
+      EEPROM.put(EEPROM_ADDR_JAR_HEIGHT, jarHeightMm);
+
+      if (!EEPROM.commit()) {
+        Serial.println("EEPROM ERROR! Commit failed");
+      }
+
+      measurements.jarHeightMm = jarHeightMm;
       break;
     case STATE_MONITOR:
       static long timeOfMaxHeightMs = millis();
