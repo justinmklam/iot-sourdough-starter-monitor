@@ -42,6 +42,8 @@ void initializeMeasurements() {
 
 void tMeasureCallback() {
   static int levainHeightMm = 0;
+  static int currentState = STATE_DEFAULT;
+  static int prevState = STATE_DEFAULT;
 
   measurements.range = vl.readRange();
   measurements.status = vl.readRangeStatus();
@@ -74,16 +76,12 @@ void tMeasureCallback() {
   // Serial.print(measurements.rise_percent);
   // Serial.print("%\n");
 
-  switch (getState()) {
+  currentState = getState();
+  switch (currentState) {
     case STATE_CALIBRATION:
       jarHeightMm = measurements.range;
-      EEPROM.put(EEPROM_ADDR_JAR_HEIGHT, jarHeightMm);
-
-      if (!EEPROM.commit()) {
-        Serial.println("EEPROM ERROR! Commit failed");
-      }
-
       measurements.jarHeightMm = jarHeightMm;
+
       break;
     case STATE_MONITOR:
       static long timeOfMaxHeightMs = millis();
@@ -119,6 +117,20 @@ void tMeasureCallback() {
       levainHeightMm = 0;
       break;
   }
+
+  // Save jar height to EEPROM when exiting calibration
+  if (prevState == STATE_CALIBRATION && currentState != STATE_CALIBRATION) {
+      EEPROM.put(EEPROM_ADDR_JAR_HEIGHT, jarHeightMm);
+
+      if (!EEPROM.commit()) {
+        Serial.println("EEPROM ERROR! Commit failed");
+      }
+      else {
+        Serial.print("Saved to EEPROM: ");
+        Serial.println(jarHeightMm);
+      }
+  }
+  prevState = currentState;
 }
 
 // CircularBuffer<float, 400> getRiseHeightBuffer() {
