@@ -131,7 +131,7 @@ void tDisplayCallback() {
             "R: %4d mm  H: %.1f %%", measurements.rise_height, measurements.humidity
           );
           snprintf(adv_row3, sizeof(adv_row3),
-            "D: %4d mm  C: %3d mm", measurements.range, measurements.jarHeightMm
+            "D: %4d mm  J: %3d mm", measurements.range, measurements.jarHeightMm
           );
           display.println(adv_row0);
           display.println(adv_row1);
