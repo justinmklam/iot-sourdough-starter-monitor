@@ -20,12 +20,14 @@ void initializeDisplay() {
   display.display();
 
   // text display big!
-  display.setTextSize(1);
+  display.setTextSize(2);
   display.setTextColor(WHITE);
 
   display.clearDisplay();
-  display.setCursor(0,0);
-  display.print("Starting...");
+  display.setCursor(8,0);
+  display.println("SOURDOUGH");
+  display.setCursor(20, SSD1306_HEIGHT_PX/2);
+  display.println("MONITOR");
   display.display();
 }
 
