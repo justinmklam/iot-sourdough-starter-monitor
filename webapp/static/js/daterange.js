@@ -1,13 +1,10 @@
-$('#inputDateRange').daterangepicker({
-    timePicker: true,
-    timePicker24Hour: true,
-    startDate: moment().startOf('hour').subtract(48, 'hour'),
-    endDate: moment(),
-    maxDate: moment(),
-    locale: {
-        format: 'MMM D, YYYY h:mm A'
-    }
+
+
+$("#inputSessionId").on("change", function() {
+    console.log("Hello")
+
 });
+
 
 $('#inputDateRange').on('apply.daterangepicker', function(ev, picker) {
     console.log(picker.startDate.format("YYYY-MM-DD HH:mm"))
@@ -22,11 +19,11 @@ $('#inputDateRange').on('apply.daterangepicker', function(ev, picker) {
         .done(function(data){
             console.log(data)
 
-            charts.distance.data = MG.convert.date(JSON.parse(data.distance), 'date');
-            charts.temperature.data = MG.convert.date(JSON.parse(data.temperature), 'date');
-            charts.humidity.data = MG.convert.date(JSON.parse(data.humidity), 'date');
+            charts.rise.data = MG.convert.date(JSON.parse(data.risepercent), 'time');
+            charts.temperature.data = MG.convert.date(JSON.parse(data.temperature), 'time');
+            charts.humidity.data = MG.convert.date(JSON.parse(data.humidity), 'time');
 
-            MG.data_graphic(charts.distance)
+            MG.data_graphic(charts.rise)
             MG.data_graphic(charts.temperature)
             MG.data_graphic(charts.humidity)
         })
