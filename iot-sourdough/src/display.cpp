@@ -74,6 +74,7 @@ void tDisplayCallback() {
           static int y0 = SSD1306_HEIGHT_PX;;
           static int y1 = y0;
           static float maxRiseHeight;
+          static float riseDurationMs = 0;
 
           display.clearDisplay();
 
@@ -100,12 +101,13 @@ void tDisplayCallback() {
             y0 = y1;
           }
 
-          // Show current rise percent at bottom right of display
+          riseDurationMs = millis() - measurements.sessionStartTimeMs;
+          // Show rise time at bottom right of screen
           display.setCursor(SSD1306_WIDTH_PX - 50, SSD1306_HEIGHT_PX - 7);
           display.setTextSize(1);
           char graph_text[10];
           snprintf(graph_text, sizeof(graph_text),
-            "%4.0f min", measurements.timeSinceMaxRiseMins
+            "%4.0f min", riseDurationMs / 1000 / 60
           );
           display.println(graph_text);
 

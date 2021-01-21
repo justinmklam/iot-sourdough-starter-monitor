@@ -95,6 +95,7 @@ void tMeasureCallback() {
         timeOfMaxHeightMs = millis();
         measurements.maxRisePercent = 0;
         measurements.timeSinceMaxRiseMins = 0;
+        measurements.sessionStartTimeMs = millis();
       }
 
       // Only add to the buffer ever N seconds since the graph should capture the whole rise in one screen

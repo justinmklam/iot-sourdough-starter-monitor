@@ -18,4 +18,5 @@ typedef struct Measurements {
   float rise_percent = 0;
   float maxRisePercent = 0;
   float timeSinceMaxRiseMins = 0;
+  long sessionStartTimeMs = 0;
 } Measurements;
