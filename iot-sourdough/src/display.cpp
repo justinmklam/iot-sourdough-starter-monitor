@@ -60,13 +60,20 @@ void tDisplayCallback() {
       switch (displayState) {
         case DISPLAY_STATE_DEFAULT:
           display.clearDisplay();
-          display.setCursor(0,0);
+          display.setCursor(25,0);
           display.setTextSize(3);
           display.print(measurements.maxRisePercent, 0);
           display.println("%");
           display.setTextSize(1);
+          display.print(" Peaked ");
           display.print(measurements.timeSinceMaxRiseMins, 0);
           display.print(" mins ago");
+
+          if (measurements.isMonitoring == true) {
+            // Show "recording" in top right corner
+            display.fillCircle(123, 3, 2, WHITE);
+          }
+
           break;
 
         case DISPLAY_STATE_GRAPH:

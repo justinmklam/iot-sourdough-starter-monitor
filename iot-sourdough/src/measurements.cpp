@@ -131,6 +131,16 @@ void tMeasureCallback() {
         Serial.println(jarHeightMm);
       }
   }
+
+  if (prevState != currentState) {
+    if (currentState == STATE_MONITOR) {
+      measurements.isMonitoring = true;
+    }
+    else if (currentState == STATE_DEFAULT) {
+      measurements.isMonitoring = false;
+    }
+
+  }
   prevState = currentState;
 }
 
