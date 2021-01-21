@@ -458,3 +458,27 @@ const mg_distance = MG.data_graphic(charts.distance);
 MG.data_graphic(charts.temperature);
 // MG.data_graphic(mg_distance);
 MG.data_graphic(charts.humidity);
+
+var inputSession = document.getElementById("inputSessionId");
+inputSession.addEventListener("change", getData);
+
+function getData() {
+    console.log(inputSession.value)
+
+    let data = {
+        sessionId: inputSession.value
+    }
+
+    $.post("/get_data", data)
+        .done(function(data){
+            console.log(data)
+
+            charts.distance.data = MG.convert.date(JSON.parse(data.risepercent), 'date', "%Y-%m-%d %H:%M:%S");
+            charts.humidity.data = MG.convert.date(JSON.parse(data.humidity), 'date', "%Y-%m-%d %H:%M:%S");
+            charts.temperature.data = MG.convert.date(JSON.parse(data.temperature), 'date', "%Y-%m-%d %H:%M:%S");
+
+            MG.data_graphic(charts.distance)
+            MG.data_graphic(charts.temperature)
+            MG.data_graphic(charts.humidity)
+    })
+}
