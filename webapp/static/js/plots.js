@@ -6,7 +6,7 @@ const globals = {
 let charts = {
     distance: {
         data: null,
-        // linked: true,
+        y_label: "rise percent (%)",
         width: globals.width,
         height: globals.height,
         full_width: true,
@@ -14,36 +14,30 @@ let charts = {
         xax_count: 4,
         brush: 'x',
         target: '#chart-distance',
-        legend: ['Rise Percent'],
-        legend_target: '#legend-distance'
     },
     temperature: {
         data: null,
-        // linked: true,
         width: globals.width,
         height: globals.height,
+        y_label: "temperature (°C)",
         full_width: true,
         color: 'green',
         right: 40,
         xax_count: 4,
         brush: 'x',
         target: '#chart-temperature',
-        legend: ['Temperature'],
-        legend_target: '#legend-temperature'
     },
     humidity: {
         data: null,
-        // linked: true,
         width: globals.width,
         height: globals.height,
+        y_label: "humidity (%)",
         full_width: true,
         color: 'red',
         right: 40,
         xax_count: 4,
         brush: 'x',
         target: '#chart-humidity',
-        legend: ['Humidity'],
-        legend_target: '#legend-humidity'
     }
 }
 
