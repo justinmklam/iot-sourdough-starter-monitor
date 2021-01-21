@@ -1,15 +1,20 @@
 from pyathena import connect
 from pyathena.pandas.util import as_pandas
 
+S3_BUCKET = 's3://levain-monitor-data/staging/'
+S3_REGION = 'us-west-2'
+TABLE_NAME = "levaindatabase.levain_table"
 
-connection = connect(s3_staging_dir='s3://levain-monitor-data/staging/',
-                 region_name='us-west-2')
+connection = connect(s3_staging_dir=S3_BUCKET, region_name=S3_REGION)
 
 cursor1 = connection.cursor()
 
-query = """
-select sessionid, min(time) as startTime, max(time) as endTime, date_diff('minute', min(time), max(time)) as durationMin
-from levaindatabase.levain_table group by sessionid
+query = f"""
+select sessionid,
+min(time) as startTime,
+max(time) as endTime,
+date_diff('minute', min(time), max(time)) as durationMin
+from {TABLE_NAME} group by sessionid
 order by startTime desc
 """
 
@@ -21,7 +26,7 @@ print(df1.head())
 
 session_id = 1782426941
 cursor2 = connection.cursor()
-query = f"select * from levaindatabase.levain_table where sessionid = {session_id}"
+query = f"select * from {TABLE_NAME} where sessionid = {session_id}"
 
 cursor2.execute(query)
 df2 = as_pandas(cursor2)
