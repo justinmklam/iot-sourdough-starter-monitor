@@ -241,5 +241,9 @@ svg {
 }
 
 .lead {
-    margin-bottom: 30px;
+    margin-bottom: 15px;
+}
+
+body {
+    zoom: 1.25;
 }
