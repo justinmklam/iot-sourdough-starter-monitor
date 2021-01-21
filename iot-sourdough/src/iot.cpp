@@ -65,7 +65,7 @@ void initializeIoT() {
   WiFi.hostname("levain-monitor");
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, pass);
-  wifi_connected = waitUntilWifiConnected(String("Attempting to connect to SSID: ") + String(ssid));
+  wifi_connected = waitUntilWifiConnected("Attempting to connect to SSID: " + String(ssid));
 
   if (offline_mode) {
     Serial.println("Wifi not connected. Starting in offline mode.");
