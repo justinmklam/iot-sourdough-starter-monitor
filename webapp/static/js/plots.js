@@ -51,6 +51,8 @@ function getData() {
         sessionId: inputSession.value
     }
 
+    inputSession.disabled = true;
+
     $.post("/get_data", data)
     .done(function(data){
         console.log(data)
@@ -62,6 +64,8 @@ function getData() {
         MG.data_graphic(charts.distance)
         MG.data_graphic(charts.temperature)
         MG.data_graphic(charts.humidity)
+
+        inputSession.disabled = false;
     })
 }
 
