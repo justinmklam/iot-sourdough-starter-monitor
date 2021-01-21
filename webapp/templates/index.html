@@ -36,7 +36,7 @@
                 <div class="col">
                     <select class="form-control" id="inputSessionId">
                         {% for id, start_time, duration in sessions %}
-                            <option value={{ id }}>{{ start_time }}, {{ duration }} mins</option>
+                            <option value={{ id }}>{{ start_time }} - {{ duration }}</option>
                         {% endfor %}
                     </select>
                 </div>

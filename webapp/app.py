@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, jsonify, make_response
+from datetime import timedelta
 import pandas as pd
 import numpy as np
 from random import randint
@@ -18,7 +19,9 @@ def hello():
     return render_template(
         "index.html",
         sessions=zip(
-            sessions["sessionid"], sessions["startTime"], sessions["durationMin"]
+            sessions["sessionid"],
+            sessions["startTime"].dt.strftime("%B %d, %Y, %r"),
+            pd.to_datetime(sessions["durationMin"], unit="m").dt.strftime("%-H hours, %-M min")
         ),
     )
 
