@@ -16,6 +16,14 @@ AwsIot awsClient;
 bool offline_mode = false;
 bool wifi_connected = false;
 
+void ledOn() {
+  digitalWrite(LED_PIN, LOW);
+}
+
+void ledOff() {
+  digitalWrite(LED_PIN, HIGH);
+}
+
 bool waitUntilWifiConnected(String message)
 {
   Serial.print(message);
@@ -60,7 +68,7 @@ void messageReceivedCallback(char *topic, byte *payload, unsigned int length)
 
 void initializeIoT() {
   pinMode(LED_PIN, OUTPUT);
-  digitalWrite(LED_PIN, HIGH); // LED off
+  ledOff();
 
   WiFi.hostname("levain-monitor");
   WiFi.mode(WIFI_STA);
@@ -72,7 +80,7 @@ void initializeIoT() {
     return;
   }
   else {
-    digitalWrite(LED_PIN, LOW); // LED on
+    ledOn();
   }
 
   // Pacific standard time = UTC -7
@@ -120,7 +128,7 @@ void tIoTCallback() {
     }
 
     if (getState() == STATE_MONITOR) {
-      digitalWrite(LED_PIN, LOW);
+      ledOn();
 
       StaticJsonDocument<200> publishMessage;
 
@@ -134,7 +142,7 @@ void tIoTCallback() {
       publishSuccess = awsClient.publishMessage(publishMessage);
 
       if (publishSuccess) {
-        digitalWrite(LED_PIN, HIGH);
+        ledOff();
       }
       else {
         Serial.println("ERROR: Message not published!");
