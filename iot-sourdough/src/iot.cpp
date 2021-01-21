@@ -115,8 +115,8 @@ void tIoTCallback() {
       return;
     }
 
-    static char shadowMessage[50];
     static bool publishSuccess = false;
+    static int numRetries = 0;
 
     if (!wifi_connected) {
       waitUntilWifiConnected("Reconnecting to " + String(ssid));
@@ -139,18 +139,24 @@ void tIoTCallback() {
       publishMessage["riseHeight"] = measurements.rise_height;
       publishMessage["risePercent"] = measurements.rise_percent;
 
-      publishSuccess = awsClient.publishMessage(publishMessage);
+      numRetries = 0;
+      do {
+        publishSuccess = awsClient.publishMessage(publishMessage);
 
-      if (publishSuccess) {
-        ledOff();
+        if (publishSuccess) {
+          ledOff();
+          break;
+        }
+        else {
+          Serial.println("Message not published, retrying...");
+          awsClient.disconnect();
+          awsClient.connect();
+        }
+        numRetries++;
+      } while (!publishSuccess && numRetries < 3);
+
+      if (!publishSuccess) {
+        Serial.println("ERROR: Couldn't publish message");
       }
-      else {
-        Serial.println("ERROR: Message not published!");
-      }
-    }
-    else {
-      // Need to keep the MQTT connection alive, so just update the shadow
-      sprintf(shadowMessage, "{\"state\":{\"reported\": {\"time\": %ld}}}", millis());
-      awsClient.updateDeviceShadow(shadowMessage);
     }
 }

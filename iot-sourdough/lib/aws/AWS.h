@@ -24,6 +24,7 @@ public:
 
   void loop();
   void connect();
+  void disconnect();
   bool connected();
 
 private:

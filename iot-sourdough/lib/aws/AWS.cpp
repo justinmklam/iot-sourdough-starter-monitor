@@ -78,6 +78,11 @@ void AwsIot::connect()
   }
 }
 
+void AwsIot::disconnect(void)
+{
+  client->disconnect();
+}
+
 void AwsIot::loadCertificatesFromSPIFFS(void)
 {
   const int num_certs = 3;
