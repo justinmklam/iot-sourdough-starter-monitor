@@ -7,8 +7,8 @@
 #include "measurements.h"
 #include "userinput.h"
 
-// 15 mins
-#define BUFFER_UPDATE_INTERVAL_MS 15*60*1000
+// mins * seconds * milliseconds
+#define BUFFER_UPDATE_INTERVAL_MS 5*60*1000
 #define DHTPIN 10
 #define DHTTYPE DHT22
 #define EEPROM_ADDR_JAR_HEIGHT 0
