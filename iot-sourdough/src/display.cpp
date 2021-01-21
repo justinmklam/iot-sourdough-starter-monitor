@@ -108,13 +108,13 @@ void tDisplayCallback() {
             y0 = y1;
           }
 
-          riseDurationMs = millis() - measurements.sessionStartTimeMs;
+          riseDurationMs = measurements.timeOfMaxRiseMs - measurements.sessionStartTimeMs;
           // Show rise time at bottom right of screen
-          display.setCursor(SSD1306_WIDTH_PX - 50, SSD1306_HEIGHT_PX - 7);
+          display.setCursor(SSD1306_WIDTH_PX - 40, SSD1306_HEIGHT_PX - 7);
           display.setTextSize(1);
           char graph_text[10];
           snprintf(graph_text, sizeof(graph_text),
-            "%4.0f min", riseDurationMs / 1000 / 60
+            "%4.1f h", riseDurationMs / 1000 / 3600
           );
           display.println(graph_text);
 

@@ -84,7 +84,6 @@ void tMeasureCallback() {
 
       break;
     case STATE_MONITOR:
-      static long timeOfMaxHeightMs = millis();
       static long prevBufferUpdateTimeMs = 0;
 
       // Start of new monitoring session
@@ -92,7 +91,7 @@ void tMeasureCallback() {
         measurements.sessionId = random(2147483647);
         levainHeightMm = jarHeightMm - measurements.range;
         bufferRiseHeight.clear();
-        timeOfMaxHeightMs = millis();
+        measurements.timeOfMaxRiseMs = millis();
         measurements.maxRisePercent = 0;
         measurements.timeSinceMaxRiseMins = 0;
         measurements.sessionStartTimeMs = millis();
@@ -105,13 +104,13 @@ void tMeasureCallback() {
         for (int i=0; i < bufferRiseHeight.size(); i++) {
           if (bufferRiseHeight[i] > measurements.maxRisePercent) {
             measurements.maxRisePercent = bufferRiseHeight[i];
-            timeOfMaxHeightMs = millis();
+            measurements.timeOfMaxRiseMs = millis();
           }
         }
         prevBufferUpdateTimeMs = millis();
       }
 
-      measurements.timeSinceMaxRiseMins = (millis() - timeOfMaxHeightMs) / 60000.0;
+      measurements.timeSinceMaxRiseMins = (millis() - measurements.timeOfMaxRiseMs) / 60000.0;
 
       break;
     case STATE_DEFAULT:
