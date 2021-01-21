@@ -114,6 +114,11 @@ void tIoTCallback() {
       waitUntilWifiConnected("Reconnecting to " + String(ssid));
     }
 
+    if (!awsClient.connected()) {
+      Serial.println("MQTT disconnected, reconnecting now.");
+      awsClient.connect();
+    }
+
     if (getState() == STATE_MONITOR) {
       digitalWrite(LED_PIN, LOW);
 
