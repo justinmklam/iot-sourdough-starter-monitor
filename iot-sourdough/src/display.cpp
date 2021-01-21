@@ -62,10 +62,10 @@ void tDisplayCallback() {
           display.clearDisplay();
           display.setCursor(0,0);
           display.setTextSize(3);
-          display.print(measurements.maxRisePercent);
+          display.print(measurements.maxRisePercent, 0);
           display.println("%");
           display.setTextSize(1);
-          display.print(measurements.timeSinceMaxRiseMins);
+          display.print(measurements.timeSinceMaxRiseMins, 0);
           display.print(" mins ago");
           break;
 
