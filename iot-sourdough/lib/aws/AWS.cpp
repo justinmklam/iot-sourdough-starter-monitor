@@ -137,12 +137,14 @@ void AwsIot::loadCertificates(const BearSSL::X509List *cert, const BearSSL::X509
   net->setClientRSACert(chain, sk);
 }
 
-void AwsIot::publishMessage(StaticJsonDocument<200> doc)
+bool AwsIot::publishMessage(StaticJsonDocument<200> doc)
 {
+  bool success = false;
+
   if (publishTopic == NULL)
   {
     Serial.println("WARNING: Please set a publish topic.");
-    return;
+    return false;
   }
 
   char msg[measureJson(doc) + 1];
@@ -151,8 +153,12 @@ void AwsIot::publishMessage(StaticJsonDocument<200> doc)
   Serial.printf("Sending [%s]: ", publishTopic);
   Serial.println(msg);
 
-  if (!client->publish(publishTopic, msg))
+  success = client->publish(publishTopic, msg);
+
+  if (!success)
     pubSubErr(client->state());
+
+  return success;
 }
 
 void AwsIot::updateDeviceShadow(const char *message)

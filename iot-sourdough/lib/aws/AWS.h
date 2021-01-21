@@ -20,7 +20,7 @@ public:
   void setCallback(MQTT_CALLBACK_SIGNATURE);
 
   void updateDeviceShadow(const char *message);
-  void publishMessage(StaticJsonDocument<200> doc);
+  bool publishMessage(StaticJsonDocument<200> doc);
 
   void loop();
   void connect();

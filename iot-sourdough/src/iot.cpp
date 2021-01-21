@@ -108,6 +108,7 @@ void tIoTCallback() {
     }
 
     static char shadowMessage[50];
+    static bool publishSuccess = false;
 
     if (!wifi_connected) {
       waitUntilWifiConnected("Reconnecting to " + String(ssid));
@@ -125,9 +126,14 @@ void tIoTCallback() {
       publishMessage["riseHeight"] = measurements.rise_height;
       publishMessage["risePercent"] = measurements.rise_percent;
 
-      awsClient.publishMessage(publishMessage);
+      publishSuccess = awsClient.publishMessage(publishMessage);
 
-      digitalWrite(LED_PIN, HIGH);
+      if (publishSuccess) {
+        digitalWrite(LED_PIN, HIGH);
+      }
+      else {
+        Serial.println("ERROR: Message not published!");
+      }
     }
     else {
       // Need to keep the MQTT connection alive, so just update the shadow
