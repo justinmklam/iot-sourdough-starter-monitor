@@ -2,14 +2,16 @@
 #include <Adafruit_Sensor.h>
 #include <DHT.h>
 #include <DHT_U.h>
+#include <EEPROM.h>
 
 #include "measurements.h"
 #include "userinput.h"
 
-// 15 mins
-#define BUFFER_UPDATE_INTERVAL_MS 15*60*1000
+// mins * seconds * milliseconds
+#define BUFFER_UPDATE_INTERVAL_MS 5*60*1000
 #define DHTPIN 10
 #define DHTTYPE DHT22
+#define EEPROM_ADDR_JAR_HEIGHT 0
 
 CircularBuffer<float, 128> bufferRiseHeight;
 
@@ -17,6 +19,7 @@ Measurements measurements;
 
 Adafruit_VL6180X vl = Adafruit_VL6180X();
 DHT_Unified dht(DHTPIN, DHTTYPE);
+int jarHeightMm = 0;
 
 void initializeMeasurements() {
   if (! vl.begin()) {
@@ -25,14 +28,22 @@ void initializeMeasurements() {
   }
   Serial.println("VL6180X sensor found!");
 
+  randomSeed(analogRead(A0));
   dht.begin();
   sensor_t dht_sensor;
   dht.temperature().getSensor(&dht_sensor);
+
+  EEPROM.begin(512);
+  EEPROM.get(EEPROM_ADDR_JAR_HEIGHT, jarHeightMm);
+  Serial.print("Jar height: ");
+  Serial.println(jarHeightMm);
+  measurements.jarHeightMm = jarHeightMm;
 }
 
 void tMeasureCallback() {
-  static int jarHeightMm = 0;
   static int levainHeightMm = 0;
+  static int currentState = STATE_DEFAULT;
+  static int prevState = STATE_DEFAULT;
 
   measurements.range = vl.readRange();
   measurements.status = vl.readRangeStatus();
@@ -65,9 +76,12 @@ void tMeasureCallback() {
   // Serial.print(measurements.rise_percent);
   // Serial.print("%\n");
 
-  switch (getState()) {
+  currentState = getState();
+  switch (currentState) {
     case STATE_CALIBRATION:
       jarHeightMm = measurements.range;
+      measurements.jarHeightMm = jarHeightMm;
+
       break;
     case STATE_MONITOR:
       static long timeOfMaxHeightMs = millis();
@@ -75,12 +89,13 @@ void tMeasureCallback() {
 
       // Start of new monitoring session
       if (levainHeightMm == 0) {
-        measurements.sessionId = millis();
+        measurements.sessionId = random(2147483647);
         levainHeightMm = jarHeightMm - measurements.range;
         bufferRiseHeight.clear();
         timeOfMaxHeightMs = millis();
         measurements.maxRisePercent = 0;
         measurements.timeSinceMaxRiseMins = 0;
+        measurements.sessionStartTimeMs = millis();
       }
 
       // Only add to the buffer ever N seconds since the graph should capture the whole rise in one screen
@@ -103,6 +118,20 @@ void tMeasureCallback() {
       levainHeightMm = 0;
       break;
   }
+
+  // Save jar height to EEPROM when exiting calibration
+  if (prevState == STATE_CALIBRATION && currentState != STATE_CALIBRATION) {
+      EEPROM.put(EEPROM_ADDR_JAR_HEIGHT, jarHeightMm);
+
+      if (!EEPROM.commit()) {
+        Serial.println("EEPROM ERROR! Commit failed");
+      }
+      else {
+        Serial.print("Saved to EEPROM: ");
+        Serial.println(jarHeightMm);
+      }
+  }
+  prevState = currentState;
 }
 
 // CircularBuffer<float, 400> getRiseHeightBuffer() {

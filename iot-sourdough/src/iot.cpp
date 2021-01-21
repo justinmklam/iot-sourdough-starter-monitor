@@ -107,9 +107,10 @@ void tIoTCallback() {
 
     static char shadowMessage[50];
 
-    digitalWrite(LED_PIN, LOW);
 
     if (getState() == STATE_MONITOR) {
+      digitalWrite(LED_PIN, LOW);
+
       StaticJsonDocument<200> publishMessage;
 
       publishMessage["deviceId"] = measurements.deviceId;
@@ -120,12 +121,12 @@ void tIoTCallback() {
       publishMessage["risePercent"] = measurements.rise_percent;
 
       awsClient.publishMessage(publishMessage);
+
+      digitalWrite(LED_PIN, HIGH);
     }
     else {
       // Need to keep the MQTT connection alive, so just update the shadow
       sprintf(shadowMessage, "{\"state\":{\"reported\": {\"time\": %ld}}}", millis());
       awsClient.updateDeviceShadow(shadowMessage);
     }
-
-    digitalWrite(LED_PIN, HIGH);
 }

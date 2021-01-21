@@ -62,19 +62,19 @@ void tDisplayCallback() {
           display.clearDisplay();
           display.setCursor(0,0);
           display.setTextSize(3);
-          display.print(measurements.maxRisePercent);
+          display.print(measurements.maxRisePercent, 0);
           display.println("%");
           display.setTextSize(1);
-          display.print(measurements.timeSinceMaxRiseMins);
+          display.print(measurements.timeSinceMaxRiseMins, 0);
           display.print(" mins ago");
           break;
 
         case DISPLAY_STATE_GRAPH:
           static int x0 = 0;
           static int y0 = SSD1306_HEIGHT_PX;;
-          static int x1 = 0;
           static int y1 = y0;
           static float maxRiseHeight;
+          static float riseDurationMs = 0;
 
           display.clearDisplay();
 
@@ -101,12 +101,13 @@ void tDisplayCallback() {
             y0 = y1;
           }
 
-          // Show current rise percent at bottom right of display
+          riseDurationMs = millis() - measurements.sessionStartTimeMs;
+          // Show rise time at bottom right of screen
           display.setCursor(SSD1306_WIDTH_PX - 50, SSD1306_HEIGHT_PX - 7);
           display.setTextSize(1);
           char graph_text[10];
           snprintf(graph_text, sizeof(graph_text),
-            "%4.0f min", measurements.timeSinceMaxRiseMins
+            "%4.0f min", riseDurationMs / 1000 / 60
           );
           display.println(graph_text);
 
@@ -131,7 +132,7 @@ void tDisplayCallback() {
             "R: %4d mm  H: %.1f %%", measurements.rise_height, measurements.humidity
           );
           snprintf(adv_row3, sizeof(adv_row3),
-            "D: %4d mm", measurements.range
+            "D: %4d mm  J: %3d mm", measurements.range, measurements.jarHeightMm
           );
           display.println(adv_row0);
           display.println(adv_row1);
