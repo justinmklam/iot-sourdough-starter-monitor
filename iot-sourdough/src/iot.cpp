@@ -13,6 +13,7 @@
 extern Measurements measurements;
 
 AwsIot awsClient;
+bool offline_mode = false;
 bool wifi_connected = false;
 
 bool waitUntilWifiConnected(String message)
@@ -25,6 +26,7 @@ bool waitUntilWifiConnected(String message)
   while (WiFi.status() != WL_CONNECTED)
   {
     if (millis() - start_time > WIFI_CONNECTION_TIMEOUT_MS) {
+      offline_mode = true;
       is_wifi_connected = false;
       break;
     }
@@ -65,7 +67,7 @@ void initializeIoT() {
   WiFi.begin(ssid, pass);
   wifi_connected = waitUntilWifiConnected(String("Attempting to connect to SSID: ") + String(ssid));
 
-  if (!wifi_connected) {
+  if (offline_mode) {
     Serial.println("Wifi not connected. Starting in offline mode.");
     return;
   }
@@ -101,12 +103,15 @@ void initializeIoT() {
 }
 
 void tIoTCallback() {
-    if (!wifi_connected) {
+    if (offline_mode) {
       return;
     }
 
     static char shadowMessage[50];
 
+    if (!wifi_connected) {
+      waitUntilWifiConnected("Reconnecting to " + String(ssid));
+    }
 
     if (getState() == STATE_MONITOR) {
       digitalWrite(LED_PIN, LOW);
