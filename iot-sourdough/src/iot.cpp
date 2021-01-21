@@ -7,7 +7,7 @@
 #include "measurements.h"
 #include "secrets.h"
 
-#define WIFI_CONNECTION_TIMEOUT_MS 30000
+#define WIFI_CONNECTION_TIMEOUT_MS 60000
 #define LED_PIN D4
 
 extern Measurements measurements;
