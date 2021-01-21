@@ -4,36 +4,40 @@ import numpy as np
 from random import randint
 from http import HTTPStatus
 
+from database import Database
+
 app = Flask(__name__)
+db = Database()
 df_global = None
+
 
 @app.route("/")
 def hello():
-    return render_template("index.html")
+    sessions = db.get_sessions()
+    print(sessions)
+    return render_template(
+        "index.html",
+        sessions=zip(
+            sessions["sessionid"], sessions["startTime"], sessions["durationMin"]
+        ),
+    )
 
 
 @app.route("/get_data", methods=["post"])
 def get_data():
     global df_global
 
-    start_date, start_time = request.form["start"].split()
-    end_date, end_time = request.form["end"].split()
-    print(start_date, start_time)
+    session_id = request.form["sessionId"]
+    print(session_id)
 
-    df = pd.read_json("data.json")
-
-    # Randomize horizontal axis
-    df = df.iloc[: randint(10, df.shape[0])]
-    # Randomize data
-    df["date"] = df["date"].dt.strftime("%Y-%m-%d")
-    df["distance"] = df["distance"] * np.random.randint(0, 100, df.shape[0])
-    df["temperature"] = df["temperature"] * np.random.randint(0, 100, df.shape[0])
-    df["humidity"] = df["humidity"] * np.random.randint(0, 100, df.shape[0])
+    df = db.get_data_from_session(session_id)
+    df["date"] = df["time"].dt.strftime("%Y-%m-%d %H:%M:%S")
+    print(df)
 
     df_global = df
     data_out = {}
 
-    for col in ["distance", "temperature", "humidity"]:
+    for col in ["risepercent", "temperature", "humidity"]:
         # Output data must have column names "date" and "value" for d3 charts
         data_out[col] = (
             df[["date", col]].rename(columns={col: "value"}).to_json(orient="records")
@@ -53,7 +57,7 @@ def download_csv():
         resp.headers["Content-Disposition"] = "attachment; filename=" + filename
         resp.headers["Content-Type"] = "text/csv"
     else:
-        resp = ('', HTTPStatus.NO_CONTENT)
+        resp = ("", HTTPStatus.NO_CONTENT)
     return resp
 
 
