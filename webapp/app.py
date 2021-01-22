@@ -8,11 +8,14 @@ app = Flask(__name__)
 app.secret_key = "dsaklj^$##&jdjsaidjsiao&&$"
 db = Database()
 
+sessions = db.get_sessions()
+print(sessions)
+
 
 @app.route("/")
 def hello():
+    # Will use cached response if available
     sessions = db.get_sessions()
-    print(sessions)
     return render_template(
         "index.html",
         sessions=zip(
