@@ -7,7 +7,7 @@
 #include "measurements.h"
 #include "secrets.h"
 
-#define PUBLISH_INTERVAL_MS 10000
+#define PUBLISH_INTERVAL_MS 60000
 #define WIFI_CONNECTION_TIMEOUT_MS 60000
 #define LED_PIN D4
 
