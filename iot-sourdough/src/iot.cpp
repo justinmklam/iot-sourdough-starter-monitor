@@ -118,6 +118,7 @@ void tIoTCallback() {
 
     static bool publishSuccess = false;
     static int numRetries = 0;
+    static long prevMillis = millis();
 
     if (!wifi_connected) {
       waitUntilWifiConnected("Reconnecting to " + String(ssid));
@@ -128,7 +129,7 @@ void tIoTCallback() {
       awsClient.connect();
     }
 
-    if (getState() == STATE_MONITOR) {
+    if (getState() == STATE_MONITOR && millis() - prevMillis > 10000) {
       ledOn();
 
       StaticJsonDocument<200> publishMessage;
@@ -159,5 +160,8 @@ void tIoTCallback() {
       if (!publishSuccess) {
         Serial.println("ERROR: Couldn't publish message");
       }
+      prevMillis = millis();
     }
+
+    awsClient.loop();
 }

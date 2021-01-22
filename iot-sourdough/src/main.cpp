@@ -13,7 +13,7 @@ Task tUserInput(10, TASK_FOREVER, &tUserInputCallback);
 
 #if ENABLE_IOT
 #include "iot.h"
-Task tIoT(10000, TASK_FOREVER, &tIoTCallback);
+Task tIoT(100, TASK_FOREVER, &tIoTCallback);
 #endif
 
 Scheduler taskManager;
