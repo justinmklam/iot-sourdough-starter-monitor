@@ -7,13 +7,23 @@
 #include "measurements.h"
 #include "secrets.h"
 
-#define WIFI_CONNECTION_TIMEOUT_MS 30000
+#define PUBLISH_INTERVAL_MS 10000
+#define WIFI_CONNECTION_TIMEOUT_MS 60000
 #define LED_PIN D4
 
 extern Measurements measurements;
 
 AwsIot awsClient;
+bool offline_mode = false;
 bool wifi_connected = false;
+
+void ledOn() {
+  digitalWrite(LED_PIN, LOW);
+}
+
+void ledOff() {
+  digitalWrite(LED_PIN, HIGH);
+}
 
 bool waitUntilWifiConnected(String message)
 {
@@ -25,6 +35,7 @@ bool waitUntilWifiConnected(String message)
   while (WiFi.status() != WL_CONNECTED)
   {
     if (millis() - start_time > WIFI_CONNECTION_TIMEOUT_MS) {
+      offline_mode = true;
       is_wifi_connected = false;
       break;
     }
@@ -58,19 +69,19 @@ void messageReceivedCallback(char *topic, byte *payload, unsigned int length)
 
 void initializeIoT() {
   pinMode(LED_PIN, OUTPUT);
-  digitalWrite(LED_PIN, HIGH); // LED off
+  ledOff();
 
   WiFi.hostname("levain-monitor");
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, pass);
-  wifi_connected = waitUntilWifiConnected(String("Attempting to connect to SSID: ") + String(ssid));
+  wifi_connected = waitUntilWifiConnected("Attempting to connect to SSID: " + String(ssid));
 
-  if (!wifi_connected) {
+  if (offline_mode) {
     Serial.println("Wifi not connected. Starting in offline mode.");
     return;
   }
   else {
-    digitalWrite(LED_PIN, LOW); // LED on
+    ledOn();
   }
 
   // Pacific standard time = UTC -7
@@ -97,19 +108,30 @@ void initializeIoT() {
 
   awsClient.connect();
 
-  digitalWrite(LED_PIN, HIGH);
+  Serial.println("IoT initialization success");
+  ledOff();
 }
 
 void tIoTCallback() {
-    if (!wifi_connected) {
+    if (offline_mode) {
       return;
     }
 
-    static char shadowMessage[50];
+    static bool publishSuccess = false;
+    static int numRetries = 0;
+    static long prevMillis = millis();
 
+    if (!wifi_connected) {
+      waitUntilWifiConnected("Reconnecting to " + String(ssid));
+    }
 
-    if (getState() == STATE_MONITOR) {
-      digitalWrite(LED_PIN, LOW);
+    if (!awsClient.connected()) {
+      Serial.println("MQTT disconnected, reconnecting now.");
+      awsClient.connect();
+    }
+
+    if (getState() == STATE_MONITOR && millis() - prevMillis > PUBLISH_INTERVAL_MS) {
+      ledOn();
 
       StaticJsonDocument<200> publishMessage;
 
@@ -120,13 +142,16 @@ void tIoTCallback() {
       publishMessage["riseHeight"] = measurements.rise_height;
       publishMessage["risePercent"] = measurements.rise_percent;
 
-      awsClient.publishMessage(publishMessage);
+      publishSuccess = awsClient.publishMessage(publishMessage);
 
-      digitalWrite(LED_PIN, HIGH);
+      if (publishSuccess) {
+        ledOff();
+      }
+      else {
+        Serial.println("ERROR: Couldn't publish message");
+      }
+      prevMillis = millis();
     }
-    else {
-      // Need to keep the MQTT connection alive, so just update the shadow
-      sprintf(shadowMessage, "{\"state\":{\"reported\": {\"time\": %ld}}}", millis());
-      awsClient.updateDeviceShadow(shadowMessage);
-    }
+
+    awsClient.loop();
 }
