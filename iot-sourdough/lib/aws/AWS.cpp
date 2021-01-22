@@ -59,9 +59,18 @@ void AwsIot::connect()
     return;
   }
 
-  Serial.print("MQTT connecting... ");
+  long startTime = millis();
+
+  Serial.print("MQTT connecting...");
   while (!client->connected())
   {
+    Serial.print(".");
+
+    if (millis() - startTime > 20000) {
+      Serial.println("MQTT connection timeout");
+      break;
+    }
+
     if (client->connect(thingname))
     {
       Serial.println("connected!");
@@ -75,6 +84,7 @@ void AwsIot::connect()
       Serial.println(" < trying again in 5 seconds...");
       delay(5000);
     }
+    delay(10);
   }
 }
 
