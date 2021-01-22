@@ -39,9 +39,9 @@ void setup()
   tMeasure.enable();
   tDisplay.enable();
   tUserInput.enable();
-
 }
 
-void loop() {
+void loop()
+{
   taskManager.execute();
 }

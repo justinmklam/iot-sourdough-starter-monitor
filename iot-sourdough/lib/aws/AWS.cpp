@@ -66,7 +66,8 @@ void AwsIot::connect()
   {
     Serial.print(".");
 
-    if (millis() - startTime > 20000) {
+    if (millis() - startTime > 20000)
+    {
       Serial.println("MQTT connection timeout");
       break;
     }
@@ -109,7 +110,7 @@ void AwsIot::loadCertificatesFromSPIFFS(void)
     return;
   }
 
-  for (int i=0; i < num_certs; i++)
+  for (int i = 0; i < num_certs; i++)
   {
     load_result = false;
     // Load certificate file
@@ -123,7 +124,8 @@ void AwsIot::loadCertificatesFromSPIFFS(void)
 
     delay(100);
 
-    switch(i) {
+    switch (i)
+    {
     case 0:
       load_result = net->loadCertificate(cert);
       break;
@@ -165,20 +167,23 @@ bool AwsIot::publishMessage(StaticJsonDocument<200> doc)
   char msg[measureJson(doc) + 1];
   serializeJson(doc, msg, sizeof(msg));
 
-
-  if (client->connected()) {
+  if (client->connected())
+  {
     success = client->publish(publishTopic, msg);
-    if (success) {
+    if (success)
+    {
       Serial.printf("Sent [%s]: ", publishTopic);
       Serial.println(msg);
     }
-    else {
+    else
+    {
       pubSubErr(client->state());
       Serial.print("Error sending: ");
       Serial.println(msg);
     }
   }
-  else {
+  else
+  {
     Serial.println("MQTT not connected!");
     success = false;
   }

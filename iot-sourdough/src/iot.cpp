@@ -17,11 +17,13 @@ AwsIot awsClient;
 bool offline_mode = false;
 bool wifi_connected = false;
 
-void ledOn() {
+void ledOn()
+{
   digitalWrite(LED_PIN, LOW);
 }
 
-void ledOff() {
+void ledOff()
+{
   digitalWrite(LED_PIN, HIGH);
 }
 
@@ -34,7 +36,8 @@ bool waitUntilWifiConnected(String message)
 
   while (WiFi.status() != WL_CONNECTED)
   {
-    if (millis() - start_time > WIFI_CONNECTION_TIMEOUT_MS) {
+    if (millis() - start_time > WIFI_CONNECTION_TIMEOUT_MS)
+    {
       offline_mode = true;
       is_wifi_connected = false;
       break;
@@ -43,10 +46,12 @@ bool waitUntilWifiConnected(String message)
     delay(1000);
   }
 
-  if (is_wifi_connected) {
+  if (is_wifi_connected)
+  {
     Serial.println("ok!");
   }
-  else {
+  else
+  {
     Serial.println("timed out");
   }
 
@@ -67,7 +72,8 @@ void messageReceivedCallback(char *topic, byte *payload, unsigned int length)
   Serial.println();
 }
 
-void initializeIoT() {
+void initializeIoT()
+{
   pinMode(LED_PIN, OUTPUT);
   ledOff();
 
@@ -76,11 +82,13 @@ void initializeIoT() {
   WiFi.begin(ssid, pass);
   wifi_connected = waitUntilWifiConnected("Attempting to connect to SSID: " + String(ssid));
 
-  if (offline_mode) {
+  if (offline_mode)
+  {
     Serial.println("Wifi not connected. Starting in offline mode.");
     return;
   }
-  else {
+  else
+  {
     ledOn();
   }
 
@@ -94,7 +102,7 @@ void initializeIoT() {
 #if LOAD_KEYS_FROM_SPIFFS
   awsClient.loadCertificatesFromSPIFFS();
 #else
-// Load from hardcoded keys
+  // Load from hardcoded keys
   BearSSL::X509List cert(cacert);
   BearSSL::X509List client_crt(client_cert);
   BearSSL::PrivateKey key(privkey);
@@ -112,46 +120,53 @@ void initializeIoT() {
   ledOff();
 }
 
-void tIoTCallback() {
-    if (offline_mode) {
-      return;
+void tIoTCallback()
+{
+  if (offline_mode)
+  {
+    return;
+  }
+
+  static bool publishSuccess = false;
+  static int numRetries = 0;
+  static long prevMillis = millis();
+
+  if (!wifi_connected)
+  {
+    waitUntilWifiConnected("Reconnecting to " + String(ssid));
+  }
+
+  if (!awsClient.connected())
+  {
+    Serial.println("MQTT disconnected, reconnecting now.");
+    awsClient.connect();
+  }
+
+  if (getState() == STATE_MONITOR && millis() - prevMillis > PUBLISH_INTERVAL_MS)
+  {
+    ledOn();
+
+    StaticJsonDocument<200> publishMessage;
+
+    publishMessage["deviceId"] = measurements.deviceId;
+    publishMessage["sessionId"] = measurements.sessionId;
+    publishMessage["temperature"] = measurements.temperature;
+    publishMessage["humidity"] = measurements.humidity;
+    publishMessage["riseHeight"] = measurements.rise_height;
+    publishMessage["risePercent"] = measurements.rise_percent;
+
+    publishSuccess = awsClient.publishMessage(publishMessage);
+
+    if (publishSuccess)
+    {
+      ledOff();
     }
-
-    static bool publishSuccess = false;
-    static int numRetries = 0;
-    static long prevMillis = millis();
-
-    if (!wifi_connected) {
-      waitUntilWifiConnected("Reconnecting to " + String(ssid));
+    else
+    {
+      Serial.println("ERROR: Couldn't publish message");
     }
+    prevMillis = millis();
+  }
 
-    if (!awsClient.connected()) {
-      Serial.println("MQTT disconnected, reconnecting now.");
-      awsClient.connect();
-    }
-
-    if (getState() == STATE_MONITOR && millis() - prevMillis > PUBLISH_INTERVAL_MS) {
-      ledOn();
-
-      StaticJsonDocument<200> publishMessage;
-
-      publishMessage["deviceId"] = measurements.deviceId;
-      publishMessage["sessionId"] = measurements.sessionId;
-      publishMessage["temperature"] = measurements.temperature;
-      publishMessage["humidity"] = measurements.humidity;
-      publishMessage["riseHeight"] = measurements.rise_height;
-      publishMessage["risePercent"] = measurements.rise_percent;
-
-      publishSuccess = awsClient.publishMessage(publishMessage);
-
-      if (publishSuccess) {
-        ledOff();
-      }
-      else {
-        Serial.println("ERROR: Couldn't publish message");
-      }
-      prevMillis = millis();
-    }
-
-    awsClient.loop();
+  awsClient.loop();
 }
