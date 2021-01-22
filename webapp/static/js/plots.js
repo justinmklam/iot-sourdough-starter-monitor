@@ -1,45 +1,63 @@
 const globals = {
     width: 600,
-    height: 200
+    height: 200,
+    full_width: true,
+    right: 40,
+    xax_count: 4,
+    brush: 'x',
 };
 
+// Deepcopy
+var distance = JSON.parse(JSON.stringify(globals));
+var temperature = JSON.parse(JSON.stringify(globals));
+var humidity = JSON.parse(JSON.stringify(globals));
+var distance_missing = JSON.parse(JSON.stringify(globals));
+var temperature_missing = JSON.parse(JSON.stringify(globals));
+var humidity_missing = JSON.parse(JSON.stringify(globals));
+
+distance.data = null;
+distance.y_label = "rise percent (%)";
+distance.target = '#chart-distance';
+
+temperature.data = null;
+temperature.y_label = "temperature (°C)";
+temperature.color = 'green';
+temperature.target = '#chart-temperature';
+
+humidity.data = null;
+humidity.y_label = "humidity (%)";
+humidity.color = 'red';
+humidity.target = '#chart-humidity';
+
+distance_missing.data = null;
+distance_missing.chart_type = "missing-data";
+distance_missing.missing_text = "Loading...";
+distance_missing.y_label = "rise percent (%)";
+distance_missing.target = '#chart-distance';
+
+temperature_missing.data = null;
+temperature_missing.chart_type = "missing-data";
+temperature_missing.missing_text = "Loading...";
+temperature_missing.y_label = "temperature (°C)";
+temperature_missing.target = '#chart-temperature';
+
+humidity_missing.data = null;
+humidity_missing.chart_type = "missing-data";
+humidity_missing.missing_text = "Loading...";
+humidity_missing.y_label = "humidity (%)";
+humidity_missing.target = '#chart-humidity';
+
 let charts = {
-    distance: {
-        data: null,
-        y_label: "rise percent (%)",
-        width: globals.width,
-        height: globals.height,
-        full_width: true,
-        right: 40,
-        xax_count: 4,
-        brush: 'x',
-        target: '#chart-distance',
-    },
-    temperature: {
-        data: null,
-        width: globals.width,
-        height: globals.height,
-        y_label: "temperature (°C)",
-        full_width: true,
-        color: 'green',
-        right: 40,
-        xax_count: 4,
-        brush: 'x',
-        target: '#chart-temperature',
-    },
-    humidity: {
-        data: null,
-        width: globals.width,
-        height: globals.height,
-        y_label: "humidity (%)",
-        full_width: true,
-        color: 'red',
-        right: 40,
-        xax_count: 4,
-        brush: 'x',
-        target: '#chart-humidity',
-    }
+    distance,
+    temperature,
+    humidity
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    MG.data_graphic(distance_missing);
+    MG.data_graphic(temperature_missing);
+    MG.data_graphic(humidity_missing);
+}, false);
 
 var inputSession = document.getElementById("inputSessionId");
 inputSession.addEventListener("change", getData);
