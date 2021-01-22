@@ -142,23 +142,12 @@ void tIoTCallback() {
       publishMessage["riseHeight"] = measurements.rise_height;
       publishMessage["risePercent"] = measurements.rise_percent;
 
-      numRetries = 0;
-      do {
-        publishSuccess = awsClient.publishMessage(publishMessage);
+      publishSuccess = awsClient.publishMessage(publishMessage);
 
-        if (publishSuccess) {
-          ledOff();
-          break;
-        }
-        else {
-          Serial.println("Message not published, retrying...");
-          awsClient.disconnect();
-          awsClient.connect();
-        }
-        numRetries++;
-      } while (!publishSuccess && numRetries < 3);
-
-      if (!publishSuccess) {
+      if (publishSuccess) {
+        ledOff();
+      }
+      else {
         Serial.println("ERROR: Couldn't publish message");
       }
       prevMillis = millis();
