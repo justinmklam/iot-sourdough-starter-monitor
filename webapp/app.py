@@ -30,6 +30,7 @@ def get_data():
 
     df = db.get_data_from_session(session_id)
     df["date"] = df["time"].dt.strftime("%Y-%m-%d %H:%M:%S")
+    df.drop(columns=["time"])
     print(df)
 
     session["df"] = df.to_dict()
