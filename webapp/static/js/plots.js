@@ -82,7 +82,17 @@ function getData() {
         MG.data_graphic(charts.distance)
         MG.data_graphic(charts.temperature)
         MG.data_graphic(charts.humidity)
+    })
+    .fail(function() {
+        distance_missing.missing_text = "Couldn't Load Data";
+        temperature_missing.missing_text = "Couldn't Load Data";
+        humidity_missing.missing_text = "Couldn't Load Data";
 
+        MG.data_graphic(distance_missing);
+        MG.data_graphic(temperature_missing);
+        MG.data_graphic(humidity_missing);
+    })
+    .always(function() {
         inputSession.disabled = false;
     })
 }
