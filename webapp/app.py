@@ -1,12 +1,12 @@
-from flask import Flask, render_template, request, jsonify, make_response
+from flask import Flask, render_template, request, jsonify, make_response, session
 import pandas as pd
 from http import HTTPStatus
 
 from database import Database
 
 app = Flask(__name__)
+app.secret_key = "dsaklj^$##&jdjsaidjsiao&&$"
 db = Database()
-df_global = None
 
 
 @app.route("/")
@@ -25,8 +25,6 @@ def hello():
 
 @app.route("/get_data", methods=["post"])
 def get_data():
-    global df_global
-
     session_id = request.form["sessionId"]
     print(session_id)
 
@@ -34,7 +32,7 @@ def get_data():
     df["date"] = df["time"].dt.strftime("%Y-%m-%d %H:%M:%S")
     print(df)
 
-    df_global = df
+    session["df"] = df.to_dict()
     data_out = {}
 
     for col in ["risepercent", "temperature", "humidity"]:
@@ -48,8 +46,8 @@ def get_data():
 
 @app.route("/download_csv", methods=["GET"])
 def download_csv():
-    global df_global
-    df = df_global
+    dict_obj = session.get("df", None)
+    df = pd.DataFrame(dict_obj)
 
     if df is not None:
         filename = "data.csv"
