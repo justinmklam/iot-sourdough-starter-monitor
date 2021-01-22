@@ -12,6 +12,7 @@
 #define DHTPIN 10
 #define DHTTYPE DHT22
 #define EEPROM_ADDR_JAR_HEIGHT 0
+#define EEPROM_ADDR_SESSION_ID 4
 
 CircularBuffer<float, 128> bufferRiseHeight;
 
@@ -88,13 +89,24 @@ void tMeasureCallback() {
 
       // Start of new monitoring session
       if (levainHeightMm == 0) {
-        measurements.sessionId = random(2147483647);
+        EEPROM.get(EEPROM_ADDR_SESSION_ID, measurements.sessionId);
+        measurements.sessionId++;
         levainHeightMm = jarHeightMm - measurements.range;
         bufferRiseHeight.clear();
         measurements.timeOfMaxRiseMs = millis();
         measurements.maxRisePercent = 0;
         measurements.timeSinceMaxRiseMins = 0;
         measurements.sessionStartTimeMs = millis();
+
+        EEPROM.put(EEPROM_ADDR_SESSION_ID, measurements.sessionId);
+        if (!EEPROM.commit()) {
+          Serial.println("EEPROM ERROR! Commit failed");
+        }
+        else {
+          Serial.print("Saved session ID to EEPROM: ");
+          Serial.println(measurements.sessionId);
+        }
+
       }
 
       // Only add to the buffer ever N seconds since the graph should capture the whole rise in one screen
