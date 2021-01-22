@@ -26,24 +26,6 @@ Internet connected sourdough starter monitor. Tracks fermentation with distance,
 - VL6180X Time of flight distance sensor
 - SSD1306 Monochrome 128x32 I2C OLED display
 
-For the DHT22:
-
-| Pinout | Connection |
-|---|---|
-| Vcc | 3v3 |
-| Data | SD3 (GPIO 10) w/ 10K pullup resistor |
-| NC | - |
-| GND | GND |
-
-For the VL6180X and SSD1306:
-
-| Pinout | Connection |
-|---|---|
-| Vcc | 3v3 |
-| SCL | D1 (GPIO 5) |
-| SDA | D2 (GPIO 4) |
-| GND | GND |
-
 ## Software
 
 AWS is used as the cloud backend. Data flow is as follows:
@@ -83,16 +65,6 @@ pio test
 # Run tests locally
 pio test -e native
 ```
-
-Dependencies (specified in `platformio.ini`):
-
-- Sensors
-    - [DHT sensor library 1.3.8](https://github.com/adafruit/DHT-sensor-library)
-    - [Adafruit_VL6180X 1.0.7](https://github.com/adafruit/Adafruit_VL6180X)
-    - [Adafruit SSD1306 2.2.1](https://github.com/adafruit/Adafruit_SSD1306)
-- AWS IOT:
-    - [PubSubClient 2.7.0](https://github.com/knolleary/pubsubclient)
-    - [ArduinoJson 6.15.1](https://github.com/bblanchon/ArduinoJson)
 
 ## Heroku
 
