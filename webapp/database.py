@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 from pyathena import connect
 from pyathena.pandas.util import as_pandas
@@ -7,13 +8,18 @@ load_dotenv()
 
 
 class Database:
-    S3_BUCKET = 's3://levain-monitor-data/staging/'
-    S3_REGION = 'us-west-2'
+    S3_BUCKET = "s3://levain-monitor-data/staging/"
+    S3_REGION = "us-west-2"
     TABLE_NAME = "levaindatabase.levain_table"
-    UTC_OFFSET = -8 # to PDT
+    UTC_OFFSET = -8  # to PDT
 
     def __init__(self):
-        self.connection = connect(s3_staging_dir=self.S3_BUCKET, region_name=self.S3_REGION)
+        self.connection = connect(
+            s3_staging_dir=self.S3_BUCKET,
+            region_name=self.S3_REGION,
+            aws_access_key_id=os.environ["AWS_ACCESS_KEY_ID"],
+            aws_secret_access_key=os.environ["AWS_SECRET_ACCESS_KEY"]
+        )
 
     def get_sessions(self):
         cursor = self.connection.cursor()
@@ -56,4 +62,3 @@ if __name__ == "__main__":
 
     df_session_data = db.get_data_from_session(session_id)
     print(df_session_data.head())
-
