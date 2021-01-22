@@ -64,19 +64,6 @@ void tMeasureCallback() {
     measurements.rise_percent = 0;
   }
 
-  // Serial.print(measurements.range);
-  // Serial.print("mm, ");
-  // Serial.print(levainHeightMm);
-  // Serial.print("mm, ");
-  // Serial.print(measurements.rise_height);
-  // Serial.print("mm, ");
-  // Serial.print(measurements.temperature);
-  // Serial.print("C, ");
-  // Serial.print(measurements.humidity);
-  // Serial.print("%, ");
-  // Serial.print(measurements.rise_percent);
-  // Serial.print("%\n");
-
   currentState = getState();
   switch (currentState) {
     case STATE_CALIBRATION:
@@ -151,7 +138,3 @@ void tMeasureCallback() {
   }
   prevState = currentState;
 }
-
-// CircularBuffer<float, 400> getRiseHeightBuffer() {
-//   return bufferRiseHeight;
-// }
