@@ -7,6 +7,7 @@
 #include "measurements.h"
 #include "secrets.h"
 
+#define PUBLISH_INTERVAL_MS 10000
 #define WIFI_CONNECTION_TIMEOUT_MS 60000
 #define LED_PIN D4
 
@@ -129,7 +130,7 @@ void tIoTCallback() {
       awsClient.connect();
     }
 
-    if (getState() == STATE_MONITOR && millis() - prevMillis > 10000) {
+    if (getState() == STATE_MONITOR && millis() - prevMillis > PUBLISH_INTERVAL_MS) {
       ledOn();
 
       StaticJsonDocument<200> publishMessage;
