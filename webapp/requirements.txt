@@ -3,3 +3,4 @@ pandas
 python-dotenv
 pyathena
 pyathena[pandas]
+gunicorn
