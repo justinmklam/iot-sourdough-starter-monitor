@@ -94,6 +94,14 @@ Dependencies (specified in `platformio.ini`):
     - [PubSubClient 2.7.0](https://github.com/knolleary/pubsubclient)
     - [ArduinoJson 6.15.1](https://github.com/bblanchon/ArduinoJson)
 
+## Heroku
+
+To deploy the web app to Heroku:
+
+```
+git subtree push --prefix webapp heroku master
+```
+
 ## AWS IoT Certificates
 
 Convert the certificates from AWS to `.der` files, then place them in `data/` (within the project directory).
