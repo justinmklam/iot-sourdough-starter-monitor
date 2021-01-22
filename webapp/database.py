@@ -12,6 +12,7 @@ class Database:
     S3_REGION = "us-west-2"
     TABLE_NAME = "levaindatabase.levain_table"
     UTC_OFFSET = -8  # to PDT
+    CACHE_EXPIRATION_SEC = 300
 
     def __init__(self):
         self.connection = connect(
@@ -33,7 +34,7 @@ class Database:
         order by startTime desc
         """
 
-        cursor.execute(query)
+        cursor.execute(query, cache_expiration_time=self.CACHE_EXPIRATION_SEC)
 
         df = as_pandas(cursor)
         df["startTime"] = df["startTime"] + pd.Timedelta(hours=self.UTC_OFFSET)
@@ -44,7 +45,7 @@ class Database:
         cursor = self.connection.cursor()
         query = f"select * from {self.TABLE_NAME} where sessionid = {session_id}"
 
-        cursor.execute(query)
+        cursor.execute(query, cache_expiration_time=self.CACHE_EXPIRATION_SEC)
 
         df = as_pandas(cursor)
         df["time"] = df["time"] + pd.Timedelta(hours=self.UTC_OFFSET)
