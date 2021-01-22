@@ -1,8 +1,5 @@
 from flask import Flask, render_template, request, jsonify, make_response
-from datetime import timedelta
 import pandas as pd
-import numpy as np
-from random import randint
 from http import HTTPStatus
 
 from database import Database
