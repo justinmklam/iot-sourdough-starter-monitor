@@ -165,13 +165,23 @@ bool AwsIot::publishMessage(StaticJsonDocument<200> doc)
   char msg[measureJson(doc) + 1];
   serializeJson(doc, msg, sizeof(msg));
 
-  Serial.printf("Sending [%s]: ", publishTopic);
-  Serial.println(msg);
 
-  success = client->publish(publishTopic, msg);
-
-  if (!success)
-    pubSubErr(client->state());
+  if (client->connected()) {
+    success = client->publish(publishTopic, msg);
+    if (success) {
+      Serial.printf("Sent [%s]: ", publishTopic);
+      Serial.println(msg);
+    }
+    else {
+      pubSubErr(client->state());
+      Serial.print("Error sending: ");
+      Serial.println(msg);
+    }
+  }
+  else {
+    Serial.println("MQTT not connected!");
+    success = false;
+  }
 
   return success;
 }
