@@ -107,7 +107,8 @@ void initializeIoT() {
 
   awsClient.connect();
 
-  digitalWrite(LED_PIN, HIGH);
+  Serial.println("IoT initialization success");
+  ledOff();
 }
 
 void tIoTCallback() {
