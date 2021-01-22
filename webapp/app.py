@@ -6,8 +6,9 @@ from database import Database
 
 
 def create_app():
+    DATA_CACHE_FILENAME = "data.pickle"
+
     app = Flask(__name__)
-    app.secret_key = "dsaklj^$##&jdjsaidjsiao&&$"
     db = Database()
 
     sessions = db.get_sessions()
@@ -38,7 +39,7 @@ def create_app():
         df.drop(columns=["time"])
         print(df)
 
-        session["df"] = df.to_dict()
+        df.to_pickle(DATA_CACHE_FILENAME)
         data_out = {}
 
         for col in ["risepercent", "temperature", "humidity"]:
@@ -53,8 +54,7 @@ def create_app():
 
     @app.route("/download_csv", methods=["GET"])
     def download_csv():
-        dict_obj = session.get("df", None)
-        df = pd.DataFrame(dict_obj)
+        df = pd.read_pickle(DATA_CACHE_FILENAME)
 
         if df is not None:
             start_time = df["time"].dt.strftime("%Y%m%d-%H%M%S").iloc[0]
