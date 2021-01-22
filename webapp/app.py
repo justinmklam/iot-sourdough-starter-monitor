@@ -50,7 +50,11 @@ def download_csv():
     df = pd.DataFrame(dict_obj)
 
     if df is not None:
-        filename = "data.csv"
+        start_time = df["time"].dt.strftime("%Y%m%d-%H%M%S").iloc[0]
+        end_time = df["time"].dt.strftime("%Y%m%d-%H%M%S").iloc[-1]
+        session_id = df["sessionid"].iloc[0]
+
+        filename = f"{session_id}_{start_time}_{end_time}.csv"
         resp = make_response(df.to_csv())
         resp.headers["Content-Disposition"] = "attachment; filename=" + filename
         resp.headers["Content-Type"] = "text/csv"
