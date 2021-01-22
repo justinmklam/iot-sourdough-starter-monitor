@@ -87,28 +87,6 @@ void tMeasureCallback() {
     case STATE_MONITOR:
       static long prevBufferUpdateTimeMs = 0;
 
-      // Start of new monitoring session
-      if (levainHeightMm == 0) {
-        EEPROM.get(EEPROM_ADDR_SESSION_ID, measurements.sessionId);
-        measurements.sessionId++;
-        levainHeightMm = jarHeightMm - measurements.range;
-        bufferRiseHeight.clear();
-        measurements.timeOfMaxRiseMs = millis();
-        measurements.maxRisePercent = 0;
-        measurements.timeSinceMaxRiseMins = 0;
-        measurements.sessionStartTimeMs = millis();
-
-        EEPROM.put(EEPROM_ADDR_SESSION_ID, measurements.sessionId);
-        if (!EEPROM.commit()) {
-          Serial.println("EEPROM ERROR! Commit failed");
-        }
-        else {
-          Serial.print("Saved session ID to EEPROM: ");
-          Serial.println(measurements.sessionId);
-        }
-
-      }
-
       // Only add to the buffer ever N seconds since the graph should capture the whole rise in one screen
       if (millis() - prevBufferUpdateTimeMs > BUFFER_UPDATE_INTERVAL_MS) {
         bufferRiseHeight.push(measurements.rise_percent);
@@ -144,7 +122,26 @@ void tMeasureCallback() {
   }
 
   if (prevState != currentState) {
+    // Start of new monitoring session
     if (currentState == STATE_MONITOR) {
+      EEPROM.get(EEPROM_ADDR_SESSION_ID, measurements.sessionId);
+      measurements.sessionId++;
+      levainHeightMm = jarHeightMm - measurements.range;
+      bufferRiseHeight.clear();
+      measurements.timeOfMaxRiseMs = millis();
+      measurements.maxRisePercent = 0;
+      measurements.timeSinceMaxRiseMins = 0;
+      measurements.sessionStartTimeMs = millis();
+
+      EEPROM.put(EEPROM_ADDR_SESSION_ID, measurements.sessionId);
+      if (!EEPROM.commit()) {
+        Serial.println("EEPROM ERROR! Commit failed");
+      }
+      else {
+        Serial.print("Saved session ID to EEPROM: ");
+        Serial.println(measurements.sessionId);
+      }
+
       measurements.isMonitoring = true;
     }
     else if (currentState == STATE_DEFAULT) {
