@@ -7,14 +7,13 @@
 // If false, device will be standalone/offline
 #define ENABLE_IOT true
 
+#if ENABLE_IOT
+#include "iot.h"
+Task tIoT(10, TASK_FOREVER, &tIoTCallback);
+#endif
 Task tMeasure(100, TASK_FOREVER, &tMeasureCallback);
 Task tDisplay(250, TASK_FOREVER, &tDisplayCallback);
 Task tUserInput(10, TASK_FOREVER, &tUserInputCallback);
-
-#if ENABLE_IOT
-#include "iot.h"
-Task tIoT(10000, TASK_FOREVER, &tIoTCallback);
-#endif
 
 Scheduler taskManager;
 
@@ -29,20 +28,20 @@ void setup()
   initializeButton();
 
   taskManager.init();
+#if ENABLE_IOT
+  initializeIoT();
+  taskManager.addTask(tIoT);
+  tIoT.enable();
+#endif
   taskManager.addTask(tMeasure);
   taskManager.addTask(tDisplay);
   taskManager.addTask(tUserInput);
   tMeasure.enable();
   tDisplay.enable();
   tUserInput.enable();
-
-#if ENABLE_IOT
-  initializeIoT();
-  taskManager.addTask(tIoT);
-  tIoT.enable();
-#endif
 }
 
-void loop() {
+void loop()
+{
   taskManager.execute();
 }

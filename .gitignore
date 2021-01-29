@@ -1,5 +1,7 @@
 .DS_Store
 *.pyc
+*.env
+*.pickle
 
 # Certificates
 *.pem.key

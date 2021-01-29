@@ -59,9 +59,19 @@ void AwsIot::connect()
     return;
   }
 
-  Serial.print("MQTT connecting... ");
+  long startTime = millis();
+
+  Serial.print("MQTT connecting...");
   while (!client->connected())
   {
+    Serial.print(".");
+
+    if (millis() - startTime > 20000)
+    {
+      Serial.println("MQTT connection timeout");
+      break;
+    }
+
     if (client->connect(thingname))
     {
       Serial.println("connected!");
@@ -75,7 +85,13 @@ void AwsIot::connect()
       Serial.println(" < trying again in 5 seconds...");
       delay(5000);
     }
+    delay(10);
   }
+}
+
+void AwsIot::disconnect(void)
+{
+  client->disconnect();
 }
 
 void AwsIot::loadCertificatesFromSPIFFS(void)
@@ -94,7 +110,7 @@ void AwsIot::loadCertificatesFromSPIFFS(void)
     return;
   }
 
-  for (int i=0; i < num_certs; i++)
+  for (int i = 0; i < num_certs; i++)
   {
     load_result = false;
     // Load certificate file
@@ -108,7 +124,8 @@ void AwsIot::loadCertificatesFromSPIFFS(void)
 
     delay(100);
 
-    switch(i) {
+    switch (i)
+    {
     case 0:
       load_result = net->loadCertificate(cert);
       break;
@@ -137,22 +154,41 @@ void AwsIot::loadCertificates(const BearSSL::X509List *cert, const BearSSL::X509
   net->setClientRSACert(chain, sk);
 }
 
-void AwsIot::publishMessage(StaticJsonDocument<200> doc)
+bool AwsIot::publishMessage(StaticJsonDocument<200> doc)
 {
+  bool success = false;
+
   if (publishTopic == NULL)
   {
     Serial.println("WARNING: Please set a publish topic.");
-    return;
+    return false;
   }
 
   char msg[measureJson(doc) + 1];
   serializeJson(doc, msg, sizeof(msg));
 
-  Serial.printf("Sending [%s]: ", publishTopic);
-  Serial.println(msg);
+  if (client->connected())
+  {
+    success = client->publish(publishTopic, msg);
+    if (success)
+    {
+      Serial.printf("Sent [%s]: ", publishTopic);
+      Serial.println(msg);
+    }
+    else
+    {
+      pubSubErr(client->state());
+      Serial.print("Error sending: ");
+      Serial.println(msg);
+    }
+  }
+  else
+  {
+    Serial.println("MQTT not connected!");
+    success = false;
+  }
 
-  if (!client->publish(publishTopic, msg))
-    pubSubErr(client->state());
+  return success;
 }
 
 void AwsIot::updateDeviceShadow(const char *message)

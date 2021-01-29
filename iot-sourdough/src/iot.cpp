@@ -7,13 +7,25 @@
 #include "measurements.h"
 #include "secrets.h"
 
-#define WIFI_CONNECTION_TIMEOUT_MS 30000
+#define PUBLISH_INTERVAL_MS 60000
+#define WIFI_CONNECTION_TIMEOUT_MS 60000
 #define LED_PIN D4
 
 extern Measurements measurements;
 
 AwsIot awsClient;
+bool offline_mode = false;
 bool wifi_connected = false;
+
+void ledOn()
+{
+  digitalWrite(LED_PIN, LOW);
+}
+
+void ledOff()
+{
+  digitalWrite(LED_PIN, HIGH);
+}
 
 bool waitUntilWifiConnected(String message)
 {
@@ -24,7 +36,9 @@ bool waitUntilWifiConnected(String message)
 
   while (WiFi.status() != WL_CONNECTED)
   {
-    if (millis() - start_time > WIFI_CONNECTION_TIMEOUT_MS) {
+    if (millis() - start_time > WIFI_CONNECTION_TIMEOUT_MS)
+    {
+      offline_mode = true;
       is_wifi_connected = false;
       break;
     }
@@ -32,10 +46,12 @@ bool waitUntilWifiConnected(String message)
     delay(1000);
   }
 
-  if (is_wifi_connected) {
+  if (is_wifi_connected)
+  {
     Serial.println("ok!");
   }
-  else {
+  else
+  {
     Serial.println("timed out");
   }
 
@@ -56,21 +72,24 @@ void messageReceivedCallback(char *topic, byte *payload, unsigned int length)
   Serial.println();
 }
 
-void initializeIoT() {
+void initializeIoT()
+{
   pinMode(LED_PIN, OUTPUT);
-  digitalWrite(LED_PIN, HIGH); // LED off
+  ledOff();
 
   WiFi.hostname("levain-monitor");
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, pass);
-  wifi_connected = waitUntilWifiConnected(String("Attempting to connect to SSID: ") + String(ssid));
+  wifi_connected = waitUntilWifiConnected("Attempting to connect to SSID: " + String(ssid));
 
-  if (!wifi_connected) {
+  if (offline_mode)
+  {
     Serial.println("Wifi not connected. Starting in offline mode.");
     return;
   }
-  else {
-    digitalWrite(LED_PIN, LOW); // LED on
+  else
+  {
+    ledOn();
   }
 
   // Pacific standard time = UTC -7
@@ -83,7 +102,7 @@ void initializeIoT() {
 #if LOAD_KEYS_FROM_SPIFFS
   awsClient.loadCertificatesFromSPIFFS();
 #else
-// Load from hardcoded keys
+  // Load from hardcoded keys
   BearSSL::X509List cert(cacert);
   BearSSL::X509List client_crt(client_cert);
   BearSSL::PrivateKey key(privkey);
@@ -97,35 +116,57 @@ void initializeIoT() {
 
   awsClient.connect();
 
-  digitalWrite(LED_PIN, HIGH);
+  Serial.println("IoT initialization success");
+  ledOff();
 }
 
-void tIoTCallback() {
-    if (!wifi_connected) {
-      return;
+void tIoTCallback()
+{
+  if (offline_mode)
+  {
+    return;
+  }
+
+  static bool publishSuccess = false;
+  static int numRetries = 0;
+  static long prevMillis = millis();
+
+  if (!wifi_connected)
+  {
+    waitUntilWifiConnected("Reconnecting to " + String(ssid));
+  }
+
+  if (!awsClient.connected())
+  {
+    Serial.println("MQTT disconnected, reconnecting now.");
+    awsClient.connect();
+  }
+
+  if (getState() == STATE_MONITOR && millis() - prevMillis > PUBLISH_INTERVAL_MS)
+  {
+    ledOn();
+
+    StaticJsonDocument<200> publishMessage;
+
+    publishMessage["deviceId"] = measurements.deviceId;
+    publishMessage["sessionId"] = measurements.sessionId;
+    publishMessage["temperature"] = measurements.temperature;
+    publishMessage["humidity"] = measurements.humidity;
+    publishMessage["riseHeight"] = measurements.rise_height;
+    publishMessage["risePercent"] = measurements.rise_percent;
+
+    publishSuccess = awsClient.publishMessage(publishMessage);
+
+    if (publishSuccess)
+    {
+      ledOff();
     }
-
-    static char shadowMessage[50];
-
-    digitalWrite(LED_PIN, LOW);
-
-    if (getState() == STATE_MONITOR) {
-      StaticJsonDocument<200> publishMessage;
-
-      publishMessage["deviceId"] = measurements.deviceId;
-      publishMessage["sessionId"] = measurements.sessionId;
-      publishMessage["temperature"] = measurements.temperature;
-      publishMessage["humidity"] = measurements.humidity;
-      publishMessage["riseHeight"] = measurements.rise_height;
-      publishMessage["risePercent"] = measurements.rise_percent;
-
-      awsClient.publishMessage(publishMessage);
+    else
+    {
+      Serial.println("ERROR: Couldn't publish message");
     }
-    else {
-      // Need to keep the MQTT connection alive, so just update the shadow
-      sprintf(shadowMessage, "{\"state\":{\"reported\": {\"time\": %ld}}}", millis());
-      awsClient.updateDeviceShadow(shadowMessage);
-    }
+    prevMillis = millis();
+  }
 
-    digitalWrite(LED_PIN, HIGH);
+  awsClient.loop();
 }

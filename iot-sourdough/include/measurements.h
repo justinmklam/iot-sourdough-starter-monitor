@@ -9,6 +9,7 @@ void tMeasureCallback();
 typedef struct Measurements {
   long sessionId = 0;
   long deviceId = 0;
+  int jarHeightMm = 0;
   uint8_t range = 0;
   uint8_t status = 0;
   float temperature = 0;
@@ -16,5 +17,8 @@ typedef struct Measurements {
   int rise_height = 0;
   float rise_percent = 0;
   float maxRisePercent = 0;
+  long timeOfMaxRiseMs = 0;
   float timeSinceMaxRiseMins = 0;
+  long sessionStartTimeMs = 0;
+  bool isMonitoring = false;
 } Measurements;

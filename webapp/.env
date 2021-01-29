@@ -1,1 +1,0 @@
-export FLASK_DEBUG=true
