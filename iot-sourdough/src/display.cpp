@@ -2,6 +2,7 @@
 #include <Adafruit_SSD1306.h>
 
 #include "display.h"
+#include "iot.h"
 #include "measurements.h"
 #include "userinput.h"
 
@@ -14,6 +15,7 @@ Adafruit_SSD1306 display = Adafruit_SSD1306(SSD1306_WIDTH_PX, SSD1306_HEIGHT_PX)
 extern CircularBuffer<float, SSD1306_WIDTH_PX> bufferRiseHeight;
 
 extern Measurements measurements;
+extern bool wifi_connected;
 
 void initializeDisplay()
 {
@@ -82,6 +84,14 @@ void tDisplayCallback()
       {
         // Show "recording" in top right corner
         display.fillCircle(123, 3, 2, WHITE);
+      }
+
+      if (wifi_connected == false)
+      {
+        // Show "x" if not connected to wifi
+        display.setCursor(0,0);
+        display.setTextSize(1);
+        display.print("x");
       }
 
       break;
