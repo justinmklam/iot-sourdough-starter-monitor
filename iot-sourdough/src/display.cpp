@@ -70,13 +70,24 @@ void tDisplayCallback()
     switch (displayState)
     {
     case DISPLAY_STATE_DEFAULT:
+      static int riseCursorX = 0;
+      // Manual centering of rise percent text
+      if (measurements.maxRisePercent > 100) {
+        riseCursorX = 25;
+      }
+      else if (measurements.maxRisePercent > 10) {
+        riseCursorX = 35;
+      }
+      else {
+        riseCursorX = 45;
+      }
       display.clearDisplay();
-      display.setCursor(25, 0);
+      display.setCursor(riseCursorX, 0);
       display.setTextSize(3);
       display.print(measurements.maxRisePercent, 0);
       display.println("%");
       display.setTextSize(1);
-      display.print(" Peaked ");
+      display.print("  Peaked ");
       display.print(measurements.timeSinceMaxRiseMins, 0);
       display.print(" mins ago");
 
