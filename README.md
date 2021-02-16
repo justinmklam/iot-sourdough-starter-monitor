@@ -25,8 +25,13 @@ Internet connected smart lid for sourdough starter. Tracks fermentation with dis
 - SSD1306 Monochrome 128x32 I2C OLED display
 
 <p align="center">
+    <img src="docs/fusion 360.png"><br>
+    <i>3D printed enclosure (designed in Fusion 360).</i>
+</p>
+
+<p align="center">
     <img src="docs/kicad.png"><br>
-    <i>PCB schematic and layout in KiCad.</i>
+    <i>PCB schematic and layout (designed in KiCad).</i>
 </p>
 
 
