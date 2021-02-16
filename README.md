@@ -1,12 +1,35 @@
 # IoT Sourdough Starter Monitor
 
-Internet connected sourdough starter monitor. Tracks fermentation with distance, temperature, and humidity sensors, and publishes data to the cloud.
+Internet connected smart lid for sourdough starter. Tracks fermentation with distance, temperature, and humidity sensors, and publishes data to the cloud for further data logging and analysis.
+
+<p align="center">
+    <img src="docs/levain-monitor-combined.png"><br>
+    <i>Web application showing the growth data from a feeding.</i>
+</p>
+
+<p align="center">
+    <img src="docs/jar1.jpg"><br>
+    <i>A smart lid for sourdough starter.</i>
+</p>
+
+## Demos
 
 <p align="center">
     <img src="docs/webapp.gif"><br>
-    <i>Web app demo with dummy data.</i>
+    <i>Three modes of operation: Max rise and time, graph, stats for nerds.</i>
 </p>
 
+<p align="center">
+    <img src="docs/jar.gif"><br>
+    <i>Three modes of operation: Max rise and time, graph, stats for nerds.</i>
+</p>
+
+## Hardware
+
+- NodeMCU ESP8266 (aka NodeMCU 1.0 ESP-12E)
+- DHT22 Temperature and humidity sensor
+- VL6180X Time of flight distance sensor
+- SSD1306 Monochrome 128x32 I2C OLED display
 
 <p align="center">
     <img src="docs/kicad.png"><br>
@@ -18,13 +41,6 @@ Internet connected sourdough starter monitor. Tracks fermentation with distance,
     <img src="docs/pcb.png"><br>
     <i>Assembled PCB.</i>
 </p>
-
-## Hardware
-
-- NodeMCU ESP8266 (aka NodeMCU 1.0 ESP-12E)
-- DHT22 Temperature and humidity sensor
-- VL6180X Time of flight distance sensor
-- SSD1306 Monochrome 128x32 I2C OLED display
 
 ## Software
 
@@ -40,7 +56,7 @@ AWS is used as the cloud backend. Data flow is as follows:
 
 ### PlatformIO
 
-This project is built using PlatformIO. To build:
+This project is built using PlatformIO v5.1.0. To build:
 
 ```bash
 # Build
