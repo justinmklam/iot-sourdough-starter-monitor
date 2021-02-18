@@ -60,20 +60,25 @@ df_out = df_out.set_index("start_time")
 print(df_out)
 colors = sns.color_palette()
 
-fig, ax = plt.subplots(2, 1, figsize=(12, 12))
+fig, ax = plt.subplots(2, 1, figsize=(12, 6))
 ax[0].bar(df_out.index.values, df_out["rise_percent"], color=colors[0])
-ax[0].set_ylabel("Max Rise (%)")
+ax[0].set_ylabel("Peak Height(%)")
 
 ax[1].bar(df_out.index.values, df_out["duration_hours"], color=colors[1])
-ax[1].set_ylabel("Rise Time (Hours)")
+ax[1].set_ylabel("Time to Peak (Hours)")
 
-ax[0].set_title("Max Rise Over Time")
+ax[0].set_title("Peak Height Over Days")
 for a in ax:
     a.xaxis.set_major_formatter(mdates.DateFormatter("%b-%d"))
+
+plt.savefig("max-rise-over-time.png")
 
 sns.lmplot(y="rise_percent", x="duration_hours", data=df_out)
 ax = plt.gca()
 ax.set_xlabel("Time to Peak (Hours)")
 ax.set_ylabel("Peak Height (%)")
 ax.set_title("Regression: Peak Height vs Time")
+plt.tight_layout()
+plt.savefig("regression.png")
+
 plt.show()
