@@ -2,6 +2,8 @@
 
 Internet connected smart lid for sourdough starter. Tracks fermentation with distance, temperature, and humidity sensors, and publishes data to the cloud for further data logging and analysis.
 
+Interested in more details? Read the full story on [justinmklam.com](https://www.justinmklam.com/posts/2021/02/levain-monitor/)!
+
 <p align="center">
     <img src="docs/levain-monitor-combined.png"><br>
     <i>Sourdough starter monitor (left), web application to view the logged data (right).</i>
